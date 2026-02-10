@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://df2hjmis62hfe"]
+
+[ext_resource type="Texture2D" uid="uid://r1r71k8ruoh6" path="res://assets/background/grid-test.png" id="1_hyk8p"]
+[ext_resource type="Texture2D" uid="uid://bfs7dnp6uo71x" path="res://assets/background/grid-test-2.png" id="1_iuonh"]
+
+[node name="Main" type="Node2D" unique_id=398658197]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1532137061]
+offset = Vector2(160, 120)
+
+[node name="MechHud" type="Node2D" parent="." unique_id=988035099]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=874765442]
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=421719560]
+offset_left = -180.0
+offset_top = -120.0
+offset_right = 460.0
+offset_bottom = 360.0
+texture = ExtResource("1_iuonh")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=398353]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_hyk8p")
