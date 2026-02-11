@@ -1,0 +1,120 @@
+[gd_scene format=3 uid="uid://bcacp0gmjtv3y"]
+
+[ext_resource type="Texture2D" uid="uid://drcqqqcdijn70" path="res://assets/mech-parts/heads/head-1.png" id="1_78eke"]
+[ext_resource type="Texture2D" uid="uid://dxqyck1u637dr" path="res://assets/ui/energy/main/energy-100.png" id="1_pd37q"]
+[ext_resource type="Texture2D" uid="uid://do0a7ho8q0gx5" path="res://assets/mech-parts/body/body-1.png" id="2_pd37q"]
+[ext_resource type="Script" uid="uid://bloc48gny0ab8" path="res://scenes/battle/mech-screen/energy-main.gd" id="2_s2j8o"]
+[ext_resource type="Texture2D" uid="uid://dufksa8q17m2o" path="res://assets/ui/energy/body/energy-body-100.png" id="2_tc3vx"]
+[ext_resource type="Texture2D" uid="uid://c1nxrcmmh37mg" path="res://assets/mech-parts/arms-right/arm-right-1.png" id="3_tc3vx"]
+[ext_resource type="Script" uid="uid://djpv5d0r0xhpd" path="res://scenes/battle/mech-screen/energy-body.gd" id="4_b7yq3"]
+[ext_resource type="Texture2D" uid="uid://3ymce5yxbmux" path="res://assets/mech-parts/arms-left/arm-left-1.png" id="4_s2j8o"]
+[ext_resource type="Texture2D" uid="uid://crwtcyuckr0mn" path="res://assets/mech-parts/legs-right/leg-right-1.png" id="5_b7yq3"]
+[ext_resource type="Texture2D" uid="uid://bsom24ndiemqd" path="res://assets/mech-parts/legs-left/leg-left-1.png" id="6_7fawv"]
+
+[node name="MechScreenLeft" type="Control" unique_id=1451565273]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 89.0
+offset_bottom = 169.0
+
+[node name="Energy" type="Control" parent="." unique_id=2003661807]
+z_index = 1
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="EnergyHead" type="TextureRect" parent="Energy" unique_id=1160937103]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 2.0
+offset_right = 56.0
+offset_bottom = 13.0
+texture = ExtResource("1_pd37q")
+stretch_mode = 2
+script = ExtResource("2_s2j8o")
+
+[node name="EnergyArmRight" type="TextureRect" parent="Energy" unique_id=546087976]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 15.0
+offset_right = 28.0
+offset_bottom = 26.0
+texture = ExtResource("1_pd37q")
+stretch_mode = 2
+script = ExtResource("2_s2j8o")
+
+[node name="EnergyArmLeft" type="TextureRect" parent="Energy" unique_id=1772960812]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 15.0
+offset_right = 84.0
+offset_bottom = 26.0
+texture = ExtResource("1_pd37q")
+stretch_mode = 2
+script = ExtResource("2_s2j8o")
+
+[node name="EnergyLegRight" type="TextureRect" parent="Energy" unique_id=1229530687]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 154.0
+offset_right = 28.0
+offset_bottom = 165.0
+texture = ExtResource("1_pd37q")
+stretch_mode = 2
+script = ExtResource("2_s2j8o")
+
+[node name="EnergyLegLeft" type="TextureRect" parent="Energy" unique_id=1625762563]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 154.0
+offset_right = 84.0
+offset_bottom = 165.0
+texture = ExtResource("1_pd37q")
+stretch_mode = 2
+script = ExtResource("2_s2j8o")
+
+[node name="EnergyBody" type="TextureRect" parent="Energy" unique_id=425905615]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 67.0
+offset_right = 54.0
+offset_bottom = 74.0
+texture = ExtResource("2_tc3vx")
+stretch_mode = 2
+script = ExtResource("4_b7yq3")
+
+[node name="Head" type="TextureRect" parent="." unique_id=1453044539]
+layout_mode = 0
+offset_right = 89.0
+offset_bottom = 169.0
+texture = ExtResource("1_78eke")
+
+[node name="Body" type="TextureRect" parent="." unique_id=1884118331]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_pd37q")
+
+[node name="ArmRight" type="TextureRect" parent="." unique_id=1980392859]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_tc3vx")
+
+[node name="ArmLeft" type="TextureRect" parent="." unique_id=1502332393]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_s2j8o")
+
+[node name="LegRight" type="TextureRect" parent="." unique_id=1055701022]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_b7yq3")
+
+[node name="LegLeft" type="TextureRect" parent="." unique_id=108931939]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_7fawv")
