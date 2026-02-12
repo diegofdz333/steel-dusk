@@ -37,6 +37,7 @@ offset_bottom = 40.0
 
 [node name="MechScreenLeft" parent="CombatRect" unique_id=1451565273 instance=ExtResource("3_k2fmo")]
 layout_mode = 0
+nameStr = "YOU"
 
 [node name="MechScreenRight" parent="CombatRect" unique_id=693847351 instance=ExtResource("3_k2fmo")]
 layout_mode = 1
@@ -46,3 +47,4 @@ anchor_right = 1.0
 offset_left = -89.0
 offset_right = 0.0
 grow_horizontal = 0
+nameStr = "ENEMY"

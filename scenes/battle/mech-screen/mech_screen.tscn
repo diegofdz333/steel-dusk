@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bcacp0gmjtv3y"]
 
 [ext_resource type="Texture2D" uid="uid://drcqqqcdijn70" path="res://assets/mech-parts/heads/head-1.png" id="1_78eke"]
+[ext_resource type="Script" uid="uid://cyk4tk2kmjtyk" path="res://scenes/battle/mech-screen/mech_screen.gd" id="1_fne70"]
 [ext_resource type="Texture2D" uid="uid://dxqyck1u637dr" path="res://assets/ui/energy/main/energy-100.png" id="1_pd37q"]
 [ext_resource type="Texture2D" uid="uid://do0a7ho8q0gx5" path="res://assets/mech-parts/body/body-1.png" id="2_pd37q"]
 [ext_resource type="Script" uid="uid://bloc48gny0ab8" path="res://scenes/battle/mech-screen/energy-main.gd" id="2_s2j8o"]
@@ -10,12 +11,14 @@
 [ext_resource type="Texture2D" uid="uid://3ymce5yxbmux" path="res://assets/mech-parts/arms-left/arm-left-1.png" id="4_s2j8o"]
 [ext_resource type="Texture2D" uid="uid://crwtcyuckr0mn" path="res://assets/mech-parts/legs-right/leg-right-1.png" id="5_b7yq3"]
 [ext_resource type="Texture2D" uid="uid://bsom24ndiemqd" path="res://assets/mech-parts/legs-left/leg-left-1.png" id="6_7fawv"]
+[ext_resource type="FontFile" uid="uid://brmfpu1mdjgyw" path="res://assets/ui/fonts/LunchMenu.ttf" id="12_fne70"]
 
-[node name="MechScreenLeft" type="Control" unique_id=1451565273]
+[node name="MechScreen" type="Control" unique_id=1451565273]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 89.0
 offset_bottom = 169.0
+script = ExtResource("1_fne70")
 
 [node name="Energy" type="Control" parent="." unique_id=2003661807]
 z_index = 1
@@ -118,3 +121,23 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_7fawv")
+
+[node name="NameLabel" type="Label" parent="." unique_id=568872358]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -21.0
+offset_right = 20.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.6509804, 0.4745098, 0.20784314, 1)
+theme_override_fonts/font = ExtResource("12_fne70")
+theme_override_font_sizes/font_size = 16
+text = "You"
+horizontal_alignment = 1
+vertical_alignment = 1
