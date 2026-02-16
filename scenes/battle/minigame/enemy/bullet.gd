@@ -7,8 +7,6 @@ var combat_area: Area2D
 var MAX_SPEED = 10000
 var speed = MAX_SPEED
 
-signal delt_damage()
-
 func _ready() -> void:
 	combat_area.body_exited.connect(_on_combat_area_exited)
 
@@ -26,5 +24,5 @@ func _on_combat_area_exited(body) -> void:
 
 func _on_hurt_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("player"):
-		delt_damage.emit()
+		SignalBus.player_hit_bullet.emit()
 		queue_free()

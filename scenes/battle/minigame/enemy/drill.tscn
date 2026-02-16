@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://n5x1kw2107gb"]
+
+[ext_resource type="Texture2D" uid="uid://bcg6etobr8o55" path="res://assets/combat/enemy/drill.png" id="1_m8du1"]
+[ext_resource type="Script" uid="uid://dpyx0njn8do7q" path="res://scenes/battle/minigame/enemy/drill.gd" id="2_m8du1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y8n7p"]
+radius = 11.0
+
+[sub_resource type="Animation" id="Animation_p21pq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HurtZone:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_uho5a"]
+resource_name = "expand"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HurtZone:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b1nv5"]
+_data = {
+&"RESET": SubResource("Animation_p21pq"),
+&"expand": SubResource("Animation_uho5a")
+}
+
+[node name="Drill" type="Sprite2D" unique_id=1670223248]
+texture = ExtResource("1_m8du1")
+hframes = 6
+script = ExtResource("2_m8du1")
+
+[node name="HurtZone" type="Area2D" parent="." unique_id=52697242]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtZone" unique_id=580077701]
+shape = SubResource("CircleShape2D_y8n7p")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=241605333]
+libraries/ = SubResource("AnimationLibrary_b1nv5")
+
+[connection signal="area_entered" from="HurtZone" to="." method="_on_hurt_zone_area_entered"]

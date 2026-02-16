@@ -6,7 +6,8 @@ var nameLabel: Label
 
 @export var mech: Enum.Mech
 
-signal set_selected_part(part: Enum.Part)
+signal set_targeted_part(part: Enum.Part)
+signal set_defended_part(part: Enum.Part)
 
 var max_health = {}
 var health: Dictionary[Enum.Part, float] = {}
@@ -84,7 +85,7 @@ func disable_selection() -> void:
 func reset_mech() -> void:
 	for part in Enum.Part.values():
 		max_health[part] = 100
-		health[part] = 10 + randf() * 90
+		health[part] = max_health[part]
 	update_health_bars()
 
 
@@ -116,7 +117,7 @@ func player_selection(part: Enum.Part) -> void:
 func set_target(part: Enum.Part) -> void:
 	hide_targeting()
 	targeted_part = part
-	set_selected_part.emit(targeted_part)
+	set_targeted_part.emit(targeted_part)
 	match part:
 		Enum.Part.HEAD:
 			$Selection/Head.show()
@@ -135,7 +136,7 @@ func set_target(part: Enum.Part) -> void:
 func set_defend(part: Enum.Part) -> void:
 	hide_defend()
 	defended_part = part
-	set_selected_part.emit(targeted_part)
+	set_defended_part.emit(targeted_part)
 	match part:
 		Enum.Part.HEAD:
 			$Defend/Head.show()

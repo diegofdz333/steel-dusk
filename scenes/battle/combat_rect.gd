@@ -43,7 +43,6 @@ func _process(delta):
 				enemy_mech.hide_defend()
 	else:
 		if Input.is_action_just_pressed("select"):
-			SignalBus.display_message.emit("...")
 			in_combat = true
 			combat_time_left = 10
 			enemy_mech.disable_selection()
@@ -68,9 +67,12 @@ func start_encounter():
 	# mech_turn = Enum.Mech.ENEMY
 	# start_enemy_attack()
 	SignalBus.display_message.emit("CLICK \"ENTER\" TO CONTINUE")
-	mech_turn = Enum.Mech.PLAYER
-	enemy_mech.enable_selection()
-	player_mech.disable_selection()
+	#mech_turn = Enum.Mech.PLAYER
+	#enemy_mech.enable_selection()
+	#player_mech.disable_selection()
+	mech_turn = Enum.Mech.ENEMY
+	player_mech.enable_selection()
+	enemy_mech.disable_selection()
 	in_combat = false
 
 
@@ -93,7 +95,8 @@ func normal_to_position(normal_pos):
 func process_combat(delta):
 	if mech_turn == Enum.Mech.ENEMY:
 		if enemy_minigame == Enum.Minigame.ENEMY_BULLET:
-			$MinigameRect.process_attack_enemy_bullets(delta)
+			#$MinigameRect.process_attack_enemy_bullets(delta)
+			$MinigameRect.process_attack_enemy_drill(delta)
 	else:
 		if player_minigame == Enum.Minigame.PLAYER_DRILL:
 			$MinigameRect.process_attack_player_drill(delta)

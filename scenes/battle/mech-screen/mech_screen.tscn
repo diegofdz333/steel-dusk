@@ -33,7 +33,7 @@ offset_bottom = 169.0
 script = ExtResource("1_fne70")
 
 [node name="Selection" type="Control" parent="." unique_id=355426839]
-z_index = 1
+z_index = 2
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -81,7 +81,7 @@ offset_bottom = 40.0
 texture = ExtResource("7_sj4ec")
 
 [node name="Energy" type="Control" parent="." unique_id=2003661807]
-z_index = 1
+z_index = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
