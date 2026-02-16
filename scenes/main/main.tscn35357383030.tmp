@@ -122,6 +122,3 @@ theme_override_fonts/normal_font = ExtResource("8_yyfjg")
 text = "THIS IS A TEST OF THE TYPING SYSTEM.
 lINE 2"
 script = ExtResource("9_b1x3f")
-
-[connection signal="set_selected_part" from="CombatRect/PlayerMech" to="CombatRect/MinigameRect" method="_on_player_mech_set_selected_part"]
-[connection signal="set_selected_part" from="CombatRect/EnemyMech" to="CombatRect/MinigameRect" method="_on_enemy_mech_set_selected_part"]

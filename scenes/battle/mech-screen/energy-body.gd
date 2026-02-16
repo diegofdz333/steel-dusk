@@ -1,7 +1,5 @@
 extends TextureRect
 
-func _ready():
-	display_health(randf())
 
 """
 Change the healthbar to display current health.

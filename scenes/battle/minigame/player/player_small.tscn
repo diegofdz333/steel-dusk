@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://ba6o5q4au0rbs"]
+
+[ext_resource type="Script" uid="uid://lcn7suj30my6" path="res://scenes/battle/minigame/player/player.gd" id="1_3swuo"]
+[ext_resource type="Texture2D" uid="uid://ki1c3btcynb0" path="res://assets/combat/player/small_icon.png" id="1_11oc3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3swuo"]
+size = Vector2(10, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c7214"]
+size = Vector2(8, 8)
+
+[node name="PlayerSmall" type="CharacterBody2D" unique_id=1857784077]
+collision_mask = 2
+script = ExtResource("1_3swuo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1254399934 groups=["player"]]
+position = Vector2(0, -1.7881393e-07)
+scale = Vector2(0.8, 0.8)
+shape = SubResource("RectangleShape2D_3swuo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2119496003]
+texture = ExtResource("1_11oc3")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=614791500 groups=["player"]]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1201365904]
+shape = SubResource("RectangleShape2D_c7214")
