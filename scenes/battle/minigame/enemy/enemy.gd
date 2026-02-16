@@ -5,6 +5,7 @@ var max_x = 100
 var is_moving_right = false
 var speed = 20
 
+
 func _process(delta):
 	var direction = Vector2.ZERO
 	if is_moving_right:

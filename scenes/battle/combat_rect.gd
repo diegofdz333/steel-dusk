@@ -29,7 +29,7 @@ func _process(delta):
 				$MinigameRect.end_enemy_attack()
 			else:
 				$MinigameRect.end_player_attack()
-			SignalBus.display_message.emit("CLICK \"ENTER\" TO CONTINUE")
+			SignalBus.display_message.emit('CLICK "ENTER" TO CONTINUE')
 			in_combat = false
 			if mech_turn == Enum.Mech.ENEMY:
 				mech_turn = Enum.Mech.PLAYER
@@ -66,7 +66,7 @@ func get_enemy_defend() -> Enum.Part:
 func start_encounter():
 	# mech_turn = Enum.Mech.ENEMY
 	# start_enemy_attack()
-	SignalBus.display_message.emit("CLICK \"ENTER\" TO CONTINUE")
+	SignalBus.display_message.emit('CLICK "ENTER" TO CONTINUE')
 	#mech_turn = Enum.Mech.PLAYER
 	#enemy_mech.enable_selection()
 	#player_mech.disable_selection()

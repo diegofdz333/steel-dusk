@@ -7,6 +7,7 @@ var combat_area: Area2D
 var MAX_SPEED = 10000
 var speed = MAX_SPEED
 
+
 func _ready() -> void:
 	combat_area.body_exited.connect(_on_combat_area_exited)
 

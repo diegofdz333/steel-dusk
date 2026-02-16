@@ -24,8 +24,14 @@ var spawn_timer: float = 0
 var rng = RandomNumberGenerator.new()
 
 # Base chance weights to hit any part assuming no targets
-const parts = [Enum.Part.HEAD, Enum.Part.BODY, Enum.Part.LEFT_ARM,
-			   Enum.Part.RIGHT_ARM, Enum.Part.LEFT_LEG, Enum.Part.RIGHT_LEG]
+const parts = [
+	Enum.Part.HEAD,
+	Enum.Part.BODY,
+	Enum.Part.LEFT_ARM,
+	Enum.Part.RIGHT_ARM,
+	Enum.Part.LEFT_LEG,
+	Enum.Part.RIGHT_LEG
+]
 const base_hit_probabilities: Array[float] = [1, 3, 2, 2, 2, 2]
 
 # Array of bullets to be cleared after combat
@@ -78,8 +84,9 @@ func process_attack_enemy_drill(delta) -> void:
 	if spawn_timer <= 0:
 		spawn_timer += ENEMY_ATTACK_DRILL_SPAWN_TIME
 		var drill_inst: Drill = drill.instantiate()
-		drill_inst.position = normal_to_position(Vector2(randf() * 0.9 + 0.05, 
-														 randf() * 0.9 + 0.05))
+		drill_inst.position = normal_to_position(
+			Vector2(randf() * 0.9 + 0.05, randf() * 0.9 + 0.05)
+		)
 		bullet_list.append(drill_inst)
 		add_child(drill_inst)
 	pass
@@ -100,10 +107,10 @@ func process_attack_player_drill(delta) -> void:
 	# TODO change to angle
 	var random_diff = Vector2(randf() * 2 - 1, randf() * 2 - 1).normalized() * 1
 	var direction: Vector2 = (player_pos - center + random_diff).normalized()
-	var damage = max((1 - distance / 40), 0) * 20 * delta
-	
+	var damage = max(1 - distance / 40, 0) * 20 * delta
+
 	damage_to_enemy(100, damage)
-	
+
 	player_small_inst.speed = 50 * 1.5 + 10
 	player_small_inst.force = direction * 50
 
@@ -123,12 +130,18 @@ func damage_to_enemy(accuracy: float, damage) -> void:
 func get_part_hit(target: Enum.Part, accuracy: float) -> Enum.Part:
 	var new_hit_probs: Array[float] = base_hit_probabilities.duplicate()
 	match target:
-		Enum.Part.HEAD: increase_hit_prob(new_hit_probs, 0, accuracy)
-		Enum.Part.BODY: increase_hit_prob(new_hit_probs, 1, accuracy)
-		Enum.Part.LEFT_ARM: increase_hit_prob(new_hit_probs, 2, accuracy)
-		Enum.Part.RIGHT_ARM: increase_hit_prob(new_hit_probs, 3, accuracy)
-		Enum.Part.LEFT_LEG: increase_hit_prob(new_hit_probs, 4, accuracy)
-		Enum.Part.RIGHT_LEG: increase_hit_prob(new_hit_probs, 5, accuracy)
+		Enum.Part.HEAD:
+			increase_hit_prob(new_hit_probs, 0, accuracy)
+		Enum.Part.BODY:
+			increase_hit_prob(new_hit_probs, 1, accuracy)
+		Enum.Part.LEFT_ARM:
+			increase_hit_prob(new_hit_probs, 2, accuracy)
+		Enum.Part.RIGHT_ARM:
+			increase_hit_prob(new_hit_probs, 3, accuracy)
+		Enum.Part.LEFT_LEG:
+			increase_hit_prob(new_hit_probs, 4, accuracy)
+		Enum.Part.RIGHT_LEG:
+			increase_hit_prob(new_hit_probs, 5, accuracy)
 	return parts[rng.rand_weighted(new_hit_probs)]
 
 

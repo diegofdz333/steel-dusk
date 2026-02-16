@@ -24,7 +24,6 @@ func _process(delta):
 		animations.play("expand")
 	if time > TIME_UNTIL_EXPAND + LIFESPAN:
 		queue_free()
-	
 
 
 func _on_hurt_zone_area_entered(area):

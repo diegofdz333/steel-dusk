@@ -4,6 +4,8 @@ extends TextureRect
 Change the healthbar to display current health.
 Health should be a variable from 0-1.
 """
+
+
 func display_health(health):
 	if health > .9:
 		texture = load("res://assets/ui/energy/main/energy-100.png")

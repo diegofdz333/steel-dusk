@@ -37,43 +37,67 @@ func _process(delta):
 		var part = targeted_part if mech == Enum.Mech.ENEMY else defended_part
 		if Input.is_action_just_pressed("move_up"):
 			match part:
-				Enum.Part.HEAD:      pass
-				Enum.Part.BODY:      player_selection(Enum.Part.HEAD)
-				Enum.Part.LEFT_ARM:  player_selection(Enum.Part.HEAD)
-				Enum.Part.RIGHT_ARM: player_selection(Enum.Part.HEAD)
-				Enum.Part.LEFT_LEG:  player_selection(Enum.Part.LEFT_ARM)
-				Enum.Part.RIGHT_LEG: player_selection(Enum.Part.RIGHT_ARM)
+				Enum.Part.HEAD:
+					pass
+				Enum.Part.BODY:
+					player_selection(Enum.Part.HEAD)
+				Enum.Part.LEFT_ARM:
+					player_selection(Enum.Part.HEAD)
+				Enum.Part.RIGHT_ARM:
+					player_selection(Enum.Part.HEAD)
+				Enum.Part.LEFT_LEG:
+					player_selection(Enum.Part.LEFT_ARM)
+				Enum.Part.RIGHT_LEG:
+					player_selection(Enum.Part.RIGHT_ARM)
 		if Input.is_action_just_pressed("move_down"):
 			match part:
-				Enum.Part.HEAD:      player_selection(Enum.Part.BODY)
-				Enum.Part.BODY:      player_selection(Enum.Part.RIGHT_LEG)
-				Enum.Part.LEFT_ARM:  player_selection(Enum.Part.LEFT_LEG)
-				Enum.Part.RIGHT_ARM: player_selection(Enum.Part.RIGHT_LEG)
-				Enum.Part.LEFT_LEG:  pass
-				Enum.Part.RIGHT_LEG: pass
+				Enum.Part.HEAD:
+					player_selection(Enum.Part.BODY)
+				Enum.Part.BODY:
+					player_selection(Enum.Part.RIGHT_LEG)
+				Enum.Part.LEFT_ARM:
+					player_selection(Enum.Part.LEFT_LEG)
+				Enum.Part.RIGHT_ARM:
+					player_selection(Enum.Part.RIGHT_LEG)
+				Enum.Part.LEFT_LEG:
+					pass
+				Enum.Part.RIGHT_LEG:
+					pass
 		if Input.is_action_just_pressed("move_right"):
 			match part:
-				Enum.Part.HEAD:      player_selection(Enum.Part.LEFT_ARM)
-				Enum.Part.BODY:      player_selection(Enum.Part.LEFT_ARM)
-				Enum.Part.LEFT_ARM:  pass
-				Enum.Part.RIGHT_ARM: player_selection(Enum.Part.BODY)
-				Enum.Part.LEFT_LEG:  pass
-				Enum.Part.RIGHT_LEG: player_selection(Enum.Part.LEFT_LEG)
+				Enum.Part.HEAD:
+					player_selection(Enum.Part.LEFT_ARM)
+				Enum.Part.BODY:
+					player_selection(Enum.Part.LEFT_ARM)
+				Enum.Part.LEFT_ARM:
+					pass
+				Enum.Part.RIGHT_ARM:
+					player_selection(Enum.Part.BODY)
+				Enum.Part.LEFT_LEG:
+					pass
+				Enum.Part.RIGHT_LEG:
+					player_selection(Enum.Part.LEFT_LEG)
 		if Input.is_action_just_pressed("move_left"):
 			match part:
-				Enum.Part.HEAD:      player_selection(Enum.Part.RIGHT_ARM)
-				Enum.Part.BODY:      player_selection(Enum.Part.RIGHT_ARM)
-				Enum.Part.LEFT_ARM:  player_selection(Enum.Part.BODY)
-				Enum.Part.RIGHT_ARM: pass
-				Enum.Part.LEFT_LEG:  player_selection(Enum.Part.RIGHT_LEG)
-				Enum.Part.RIGHT_LEG: pass
+				Enum.Part.HEAD:
+					player_selection(Enum.Part.RIGHT_ARM)
+				Enum.Part.BODY:
+					player_selection(Enum.Part.RIGHT_ARM)
+				Enum.Part.LEFT_ARM:
+					player_selection(Enum.Part.BODY)
+				Enum.Part.RIGHT_ARM:
+					pass
+				Enum.Part.LEFT_LEG:
+					player_selection(Enum.Part.RIGHT_LEG)
+				Enum.Part.RIGHT_LEG:
+					pass
 
 
 func enable_selection() -> void:
 	selection_enabled = true
-	if mech == Enum.Mech.PLAYER and defended_part == null: 
+	if mech == Enum.Mech.PLAYER and defended_part == null:
 		defended_part = Enum.Part.HEAD
-	if mech == Enum.Mech.ENEMY and targeted_part == null: 
+	if mech == Enum.Mech.ENEMY and targeted_part == null:
 		targeted_part = Enum.Part.HEAD
 	player_selection(targeted_part)
 
@@ -157,6 +181,7 @@ func set_mech_name(text: String) -> void:
 
 
 # Health and Damage
+
 
 func on_damage(part: Enum.Part, damage: float) -> void:
 	health[part] -= damage

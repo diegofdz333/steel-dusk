@@ -1,5 +1,6 @@
 extends RichTextLabel
 
+
 func _ready():
 	SignalBus.display_message.connect(display_text)
 
