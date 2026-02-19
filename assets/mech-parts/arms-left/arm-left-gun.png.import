@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3ymce5yxbmux"
-path="res://.godot/imported/arm-left-1.png-b72dba7c8baf782533ac538fc3fa011e.ctex"
+uid="uid://cgqfh1cxt8qht"
+path="res://.godot/imported/arm-left-gun.png-504a2266b6fe2bd77a7e58cc24694f3c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/mech-parts/arms-left/arm-left-1.png"
-dest_files=["res://.godot/imported/arm-left-1.png-b72dba7c8baf782533ac538fc3fa011e.ctex"]
+source_file="res://assets/mech-parts/arms-left/arm-left-gun.png"
+dest_files=["res://.godot/imported/arm-left-gun.png-504a2266b6fe2bd77a7e58cc24694f3c.ctex"]
 
 [params]
 

@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://c1nxrcmmh37mg" path="res://assets/mech-parts/arms-right/arm-right-1.png" id="3_tc3vx"]
 [ext_resource type="Script" uid="uid://djpv5d0r0xhpd" path="res://scenes/battle/mech-screen/energy-body.gd" id="4_b7yq3"]
 [ext_resource type="Texture2D" uid="uid://cpgjomh1kwdj4" path="res://assets/ui/selection/select-arm-right.png" id="4_bpv73"]
-[ext_resource type="Texture2D" uid="uid://3ymce5yxbmux" path="res://assets/mech-parts/arms-left/arm-left-1.png" id="4_s2j8o"]
+[ext_resource type="Texture2D" uid="uid://3ymce5yxbmux" path="res://assets/mech-parts/arms-left/arm-left-drill.png" id="4_s2j8o"]
 [ext_resource type="Texture2D" uid="uid://crwtcyuckr0mn" path="res://assets/mech-parts/legs-right/leg-right-1.png" id="5_b7yq3"]
 [ext_resource type="Texture2D" uid="uid://bj8yq6ypt10qw" path="res://assets/ui/selection/select-arm-left.png" id="5_e6ak2"]
 [ext_resource type="Texture2D" uid="uid://bsom24ndiemqd" path="res://assets/mech-parts/legs-left/leg-left-1.png" id="6_7fawv"]
@@ -195,36 +195,42 @@ offset_bottom = 40.0
 texture = ExtResource("17_3hrig")
 
 [node name="Head" type="TextureRect" parent="." unique_id=1453044539]
+visible = false
 layout_mode = 0
 offset_right = 89.0
 offset_bottom = 169.0
 texture = ExtResource("1_78eke")
 
 [node name="Body" type="TextureRect" parent="." unique_id=1884118331]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("2_pd37q")
 
 [node name="ArmRight" type="TextureRect" parent="." unique_id=1980392859]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("3_tc3vx")
 
 [node name="ArmLeft" type="TextureRect" parent="." unique_id=1502332393]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("4_s2j8o")
 
 [node name="LegRight" type="TextureRect" parent="." unique_id=1055701022]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_b7yq3")
 
 [node name="LegLeft" type="TextureRect" parent="." unique_id=108931939]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0

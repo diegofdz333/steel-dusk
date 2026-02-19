@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 SignalBus="*uid://da667hnxbka6t"
 Enum="*uid://1lgtnabba3rd"
+Textures="*uid://drtq13na0ej6r"
+Utils="*uid://ca4fscdk0fnjl"
 
 [display]
 
@@ -31,6 +33,7 @@ window/stretch/scale=4.0
 [global_group]
 
 player=""
+enemy=""
 
 [input]
 
@@ -70,6 +73,7 @@ select={
 2d_physics/layer_1="player"
 2d_physics/layer_2="minigame"
 2d_physics/layer_3="bullet"
+2d_physics/layer_4="enemy"
 
 [physics]
 

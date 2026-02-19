@@ -1,6 +1,6 @@
-extends Sprite2D
-
 class_name Drill
+
+extends Sprite2D
 
 const TIME_UNTIL_EXPAND: float = 2
 const LIFESPAN: float = 2

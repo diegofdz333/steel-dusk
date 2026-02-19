@@ -8,15 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://badoqvijk4p6q" path="res://assets/background/minigames/drill_target.png" id="4_blune"]
 [ext_resource type="Script" uid="uid://chd45g26ttxua" path="res://scenes/battle/minigame/minigames.gd" id="4_hujxm"]
 [ext_resource type="PackedScene" uid="uid://cenandd76a37t" path="res://scenes/battle/minigame/player/player.tscn" id="5_6q06x"]
-[ext_resource type="Texture2D" uid="uid://xhpotfc05e6h" path="res://assets/background/wonders/great-wall.png" id="5_nvumn"]
 [ext_resource type="PackedScene" uid="uid://k3efahdiwmqw" path="res://scenes/battle/minigame/enemy/bullet.tscn" id="5_ow5a4"]
-[ext_resource type="Script" uid="uid://cm4nryrny8chk" path="res://scenes/main/story_image.gd" id="6_ou6is"]
 [ext_resource type="PackedScene" uid="uid://ba6o5q4au0rbs" path="res://scenes/battle/minigame/player/player_small.tscn" id="8_ouso4"]
 [ext_resource type="FontFile" uid="uid://brmfpu1mdjgyw" path="res://assets/ui/fonts/LunchMenu.ttf" id="8_yyfjg"]
 [ext_resource type="Script" uid="uid://cnvf1bks221sq" path="res://scenes/battle/combat_dialogue.gd" id="9_b1x3f"]
 [ext_resource type="PackedScene" uid="uid://n5x1kw2107gb" path="res://scenes/battle/minigame/enemy/drill.tscn" id="10_th5th"]
 [ext_resource type="PackedScene" uid="uid://x2wqu51v6pom" path="res://scenes/battle/minigame/enemy/enemy.tscn" id="11_7smn1"]
-[ext_resource type="PackedScene" uid="uid://bok4pk52mtwko" path="res://scenes/battle/minigame/player/weapons/player_bullet.tscn" id="12_raeie"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_6q06x"]
 
@@ -50,16 +47,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("4_blune")
 
-[node name="StoryImage" type="TextureRect" parent="CombatRect" unique_id=709715498]
-z_index = -8
-layout_mode = 0
-offset_left = -229.0
-offset_top = -113.0
-offset_right = 277.0
-offset_bottom = 287.0
-texture = ExtResource("5_nvumn")
-script = ExtResource("6_ou6is")
-
 [node name="Background" type="TextureRect" parent="CombatRect" unique_id=527798850]
 z_index = -10
 layout_mode = 0
@@ -78,7 +65,6 @@ drill = ExtResource("10_th5th")
 player = ExtResource("5_6q06x")
 player_small = ExtResource("8_ouso4")
 enemy = ExtResource("11_7smn1")
-player_bullet = ExtResource("12_raeie")
 
 [node name="MinigameBorders" type="StaticBody2D" parent="CombatRect/MinigameRect" unique_id=839393997]
 collision_layer = 2

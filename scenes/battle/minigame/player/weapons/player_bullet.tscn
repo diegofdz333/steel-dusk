@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bok4pk52mtwko"]
+
+[ext_resource type="Script" uid="uid://bu6r6xfu04xqi" path="res://scenes/battle/minigame/enemy/bullet.gd" id="1_3m0xg"]
+[ext_resource type="Texture2D" uid="uid://uc6r7hch5uiq" path="res://assets/combat/enemy/bullet.png" id="2_1ukua"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yckx2"]
+size = Vector2(4, 6)
+
+[node name="Bullet" type="CharacterBody2D" unique_id=793659493 groups=["enemy"]]
+z_index = -5
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("1_3m0xg")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1309863844]
+scale = Vector2(1, -1)
+texture = ExtResource("2_1ukua")
+
+[node name="HurtZone" type="Area2D" parent="." unique_id=521537768 groups=["enemy"]]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtZone" unique_id=1740165641]
+shape = SubResource("RectangleShape2D_yckx2")
+
+[connection signal="area_entered" from="HurtZone" to="." method="_on_hurt_zone_area_entered"]

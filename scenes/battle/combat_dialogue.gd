@@ -6,4 +6,4 @@ func _ready():
 
 
 func display_text(text: String):
-	self.text = text
+	self.text = text.to_upper()
