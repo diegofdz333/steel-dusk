@@ -20,7 +20,8 @@ func _process(delta):
 	velocity = Vector2.ZERO
 	if minigame == Enum.Minigame.ENEMY_BULLET or \
 	   minigame == Enum.Minigame.PLAYER_DRILL or \
-	   minigame == Enum.Minigame.ENEMY_DRILL:
+	   minigame == Enum.Minigame.ENEMY_DRILL or \
+	   minigame == Enum.Minigame.ENEMY_FIST:
 		velocity += direction * speed
 	if minigame == Enum.Minigame.PLAYER_DRILL:
 		velocity += force
@@ -34,7 +35,6 @@ func _process(delta):
 		if Input.is_action_just_pressed("select") and delay <= 0:
 			delay = max_delay
 			SignalBus.create_player_bullet.emit(position)
-			
 
 
 func get_movement_vector() -> Vector2:

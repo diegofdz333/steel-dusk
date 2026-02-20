@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://02e5mtaka3iu"]
+
+[ext_resource type="Script" uid="uid://bhqq6t8pa7bf3" path="res://scenes/battle/minigame/enemy/fist.gd" id="1_bv6wq"]
+[ext_resource type="Texture2D" uid="uid://dsd3ls5l00e62" path="res://assets/combat/enemy/fist.png" id="2_bv6wq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yckx2"]
+size = Vector2(46, 78)
+
+[node name="Fist" type="CharacterBody2D" unique_id=793659493]
+z_index = -5
+collision_layer = 4
+script = ExtResource("1_bv6wq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1309863844]
+texture = ExtResource("2_bv6wq")
+
+[node name="HurtZone" type="Area2D" parent="." unique_id=521537768]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtZone" unique_id=1740165641]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_yckx2")
+
+[connection signal="area_entered" from="HurtZone" to="." method="_on_hurt_zone_area_entered"]

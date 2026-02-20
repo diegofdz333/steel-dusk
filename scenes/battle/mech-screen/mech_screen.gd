@@ -94,14 +94,14 @@ func set_default_mech() -> void:
 	add_child(arm_left)
 	if mech == Enum.Mech.PLAYER:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_gun
-		arm_right.player_minigame = Enum.Minigame.PLAYER_BULLET
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_BULLET
+		arm_right.texture = Textures.arm_right_fist
+		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
 	else:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_drill
-		arm_right.player_minigame = Enum.Minigame.PLAYER_DRILL
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_DRILL
+		arm_right.texture = Textures.arm_right_fist
+		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
 	add_child(arm_right)
 	leg_left = MechPart.new(Enum.Part.LEFT_LEG)
 	leg_left.texture = Textures.leg_left_default

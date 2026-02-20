@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c1nxrcmmh37mg"
-path="res://.godot/imported/arm-right-1.png-36581b041de5efc97285ab128ea953ad.ctex"
+path="res://.godot/imported/arm-right-fist.png-0c9302d1d9915a3e65f8f22b950d6e32.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/mech-parts/arms-right/arm-right-1.png"
-dest_files=["res://.godot/imported/arm-right-1.png-36581b041de5efc97285ab128ea953ad.ctex"]
+source_file="res://assets/mech-parts/arms-right/arm-right-fist.png"
+dest_files=["res://.godot/imported/arm-right-fist.png-0c9302d1d9915a3e65f8f22b950d6e32.ctex"]
 
 [params]
 

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b6jj2k4jeo6db"]
+
+[ext_resource type="Texture2D" uid="uid://csvi2ntfuljm" path="res://assets/combat/player/arrow.png" id="1_jsjxl"]
+
+[node name="Arrow" type="TextureRect" unique_id=438465857]
+offset_left = -6.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = 6.0
+pivot_offset = Vector2(6, 6)
+texture = ExtResource("1_jsjxl")

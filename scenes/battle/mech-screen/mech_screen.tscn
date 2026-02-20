@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bloc48gny0ab8" path="res://scenes/battle/mech-screen/energy-main.gd" id="2_s2j8o"]
 [ext_resource type="Texture2D" uid="uid://dufksa8q17m2o" path="res://assets/ui/energy/body/energy-body-100.png" id="2_tc3vx"]
 [ext_resource type="Texture2D" uid="uid://djvcpiifxkvvv" path="res://assets/ui/selection/select-body.png" id="3_msbq5"]
-[ext_resource type="Texture2D" uid="uid://c1nxrcmmh37mg" path="res://assets/mech-parts/arms-right/arm-right-1.png" id="3_tc3vx"]
+[ext_resource type="Texture2D" uid="uid://c1nxrcmmh37mg" path="res://assets/mech-parts/arms-right/arm-right-fist.png" id="3_tc3vx"]
 [ext_resource type="Script" uid="uid://djpv5d0r0xhpd" path="res://scenes/battle/mech-screen/energy-body.gd" id="4_b7yq3"]
 [ext_resource type="Texture2D" uid="uid://cpgjomh1kwdj4" path="res://assets/ui/selection/select-arm-right.png" id="4_bpv73"]
 [ext_resource type="Texture2D" uid="uid://3ymce5yxbmux" path="res://assets/mech-parts/arms-left/arm-left-drill.png" id="4_s2j8o"]

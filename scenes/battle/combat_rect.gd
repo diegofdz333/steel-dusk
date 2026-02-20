@@ -171,12 +171,15 @@ func start_encounter():
 	# start_enemy_attack()
 	enemy_mech.personality = Enum.Personality.OPPORTUNISTIC
 	SignalBus.display_message.emit('CLICK "ENTER" TO CONTINUE')
+	
 	mech_turn = Enum.Mech.PLAYER
 	enemy_mech.enable_selection()
 	player_mech.disable_selection()
+	
 	#mech_turn = Enum.Mech.ENEMY
 	#player_mech.enable_selection()
 	#enemy_mech.disable_selection()
+	
 	in_combat = false
 
 
