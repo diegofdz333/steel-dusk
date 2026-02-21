@@ -9,20 +9,26 @@ const TOTAL_ATTACK_TIME: float = 10
 const ENEMY_ATTACK_BULLET_SPAWN_TIME = 0.10
 const ENEMY_ATTACK_DRILL_SPAWN_TIME = 0.10
 const ENEMY_ATTACK_FIST_SPAWN_TIME = 0.7
+const ENEMY_ATTACK_SPEAR_MIN_TIME = 2
+const ENEMY_ATTACK_SPEAR_MAX_TIME = 9
+const ENEMY_ATTACK_SPEAR_REACTION_TIME = 0.5
 const PLAYER_ATTACK_BULLET_ENEMY_SPEED = 50
 const PLAYER_ATTACK_DRILL_FORCE = 50
 const PLAYER_ATTACK_FIST_BASE_ARROWS = 5
+const PLAYER_ATTACK_SPEAR_ACCELERATION = 5
 
 const PLAYER_ATTACK_FIST_ARROW_SIZE = 12
 const PLAYER_ATTACK_FIST_ARROW_SPACING = 3
 const PLAYER_ATTACK_FIST_MAX_ARROWS = 9
 
-const ENEMY_ATTACK_BULLET_DAMAGE_MULT = 1
-const ENEMY_ATTACK_DRILL_DAMAGE_MULT = 1
-const ENEMY_ATTACK_FIST_DAMAGE_MULT = 2
+const ENEMY_ATTACK_BULLET_DAMAGE_MULT = 2
+const ENEMY_ATTACK_DRILL_DAMAGE_MULT = 2
+const ENEMY_ATTACK_FIST_DAMAGE_MULT = 3
+const ENEMY_ATTACK_SPEAR_DAMAGE_MULT = 6
 const PLAYER_ATTACK_BULLET_DAMAGE_MULT = 1
 const PLAYER_ATTACK_DRILL_DAMAGE_MULT = 1
 const PLAYER_ATTACK_FIST_DAMAGE_MULT = 1
+const PLAYER_ATTACK_SPEAR_DAMAGE_MULT = 5
 
 # Base chance weights to hit any part assuming no targets
 const PARTS = [
@@ -34,6 +40,8 @@ const PARTS = [
 	Enum.Part.RIGHT_LEG
 ]
 const BASE_HIT_PROBABILITIES: Array[float] = [1, 3, 2, 2, 2, 2]
+
+var minigame_background: MinigameBackground
 
 var bullet: PackedScene = preload("res://scenes/battle/minigame/enemy/bullet.tscn")
 var drill: PackedScene = preload("res://scenes/battle/minigame/enemy/drill.tscn")
@@ -75,11 +83,19 @@ var arrow_directions: Array[int]
 var is_player_fist_attack_generated = false
 var current_arrow_index: int = 0
 
+var threw_spear: bool = false
+var stop_attacking: bool = false
+var defence_time_left: float = 0
+
+var noise = FastNoiseLite.new()
+var time = 0
+
 func _ready():
 	SignalBus.player_hit_bullet.connect(on_player_hit_bullet)
 	SignalBus.enemy_hit_bullet.connect(on_enemy_hit_bullet)
 	SignalBus.create_player_bullet.connect(on_create_player_bullet)
 	damage_mult = 1
+	minigame_background = $MinigameBackground
 
 
 func set_combat_stats(accuracy: float, evasion: float, damage: float):
@@ -98,7 +114,6 @@ func position_to_normal(pos) -> Vector2:
 
 func start_attack_enemy_bullets() -> void:
 	damage_mult = ENEMY_ATTACK_BULLET_DAMAGE_MULT
-	SignalBus.display_message.emit("Dodge the bullets!")
 	player_inst = player.instantiate()
 	player_inst.position = normal_to_position(Vector2(0.5, 0.5))
 	player_inst.minigame = Enum.Minigame.ENEMY_BULLET
@@ -122,7 +137,6 @@ func on_player_hit_bullet() -> void:
 
 func start_attack_enemy_drill() -> void:
 	damage_mult = ENEMY_ATTACK_DRILL_DAMAGE_MULT
-	SignalBus.display_message.emit("Dodge the incomming drill attacks!")
 	player_inst = player.instantiate()
 	player_inst.position = normal_to_position(Vector2(0.5, 0.5))
 	player_inst.minigame = Enum.Minigame.ENEMY_DRILL
@@ -143,7 +157,6 @@ func process_attack_enemy_drill(delta) -> void:
 
 func start_attack_enemy_fist() -> void:
 	damage_mult = ENEMY_ATTACK_FIST_DAMAGE_MULT
-	SignalBus.display_message.emit("Dodge the inccoming punches!")
 	player_inst = player.instantiate()
 	player_inst.position = normal_to_position(Vector2(0.5, 0.5))
 	player_inst.minigame = Enum.Minigame.ENEMY_FIST
@@ -186,9 +199,40 @@ func process_attack_enemy_fist(delta) -> void:
 		add_child(fist_inst)
 
 
+func start_attack_enemy_spear() -> void:
+	var diff = ENEMY_ATTACK_SPEAR_MAX_TIME - ENEMY_ATTACK_SPEAR_MIN_TIME
+	spawn_timer = ENEMY_ATTACK_SPEAR_MIN_TIME + randf() * diff
+	threw_spear = false
+	defence_time_left = 0
+	stop_attacking = false
+	damage_mult = ENEMY_ATTACK_SPEAR_DAMAGE_MULT
+	player_inst = player.instantiate()
+	player_inst.position = normal_to_position(Vector2(0.5, 0.5))
+	player_inst.minigame = Enum.Minigame.ENEMY_SPEAR
+	add_child(player_inst)
+
+func process_attack_enemy_spear(delta) -> void:
+	if not stop_attacking:
+		spawn_timer -= delta
+		defence_time_left -= delta
+		
+		if defence_time_left  < - ENEMY_ATTACK_SPEAR_REACTION_TIME and Input.is_action_just_pressed("select"):
+			defence_time_left = ENEMY_ATTACK_SPEAR_REACTION_TIME
+			player_inst.show_shield(ENEMY_ATTACK_SPEAR_REACTION_TIME * 0.9)
+		
+		if spawn_timer < 0 and not threw_spear:
+			threw_spear = true
+			spawn_timer = ENEMY_ATTACK_SPEAR_REACTION_TIME
+			minigame_background.show_flash()
+		elif spawn_timer < 0 and threw_spear:
+			stop_attacking = true
+			minigame_background.show_target()
+			if defence_time_left < 0:
+				damage_to_player(damage_mult)
+
+
 func start_attack_player_bullet() -> void:
 	damage_mult = PLAYER_ATTACK_BULLET_DAMAGE_MULT
-	SignalBus.display_message.emit('Click "Enter" to shoot target!')
 	
 	var enemy_inst: Enemy = enemy.instantiate()
 	enemy_inst.speed = PLAYER_ATTACK_BULLET_ENEMY_SPEED / attacker_advantage
@@ -218,7 +262,6 @@ func on_enemy_hit_bullet() -> void:
 
 func start_attack_player_drill() -> void:
 	damage_mult = PLAYER_ATTACK_DRILL_DAMAGE_MULT
-	SignalBus.display_message.emit("Keep your target closer to the center for more damage!")
 	player_small_inst = player_small.instantiate()
 	player_small_inst.position = normal_to_position(Vector2(0.5, 0.5))
 	player_small_inst.minigame = Enum.Minigame.PLAYER_DRILL
@@ -241,10 +284,14 @@ func process_attack_player_drill(delta) -> void:
 
 
 func start_attack_player_fist() -> void:
-	SignalBus.display_message.emit("Match the arrows!")
+	print("Starting Arrow Attack")
 	damage_mult = PLAYER_ATTACK_FIST_DAMAGE_MULT
 	is_player_fist_attack_generated = false
 	current_arrow_index = 0
+	for a in arrows:
+		a.queue_free()
+	print("Clearing arrows")
+	arrows.clear()
 
 func process_attack_player_fist(delta) -> void:
 	var arrow_num: int = min(ceil(PLAYER_ATTACK_FIST_BASE_ARROWS / damage_mult), PLAYER_ATTACK_FIST_MAX_ARROWS)
@@ -287,10 +334,51 @@ func process_attack_player_fist(delta) -> void:
 						damage_to_enemy(damage_mult)
 						for a in arrows:
 							a.queue_free()
+						arrows.clear()
 				else:
 					current_arrow_index = 0
 					for a in arrows:
 						a.show()
+
+
+func start_attack_player_spear() -> void:
+	damage_mult = PLAYER_ATTACK_SPEAR_DAMAGE_MULT 
+	player_small_inst = player_small.instantiate()
+	player_small_inst.position = normal_to_position(Vector2(0.6, 0.8))
+	player_small_inst.velocity = Vector2(100 , 100)
+	player_small_inst.minigame = Enum.Minigame.PLAYER_SPEAR
+	time += randf() * 1000
+	noise.seed = randi()
+	noise.frequency = 0.1
+	stop_attacking = false
+	
+	add_child(player_small_inst)
+
+func process_attack_player_spear(delta) -> void:
+	if not stop_attacking:
+		time += delta
+		
+		var noise_v = Vector2(
+			noise.get_noise_1d(time),
+			noise.get_noise_1d(time + 1000) # Offset to decouple X and Y
+		) / attacker_advantage
+		
+		var w = 5 / attacker_advantage
+		var w_2 = 2 / attacker_advantage
+		var x = min(1, 1 / attacker_advantage) * sin(w * time) + noise_v.x
+		var y = min(1, 1 / attacker_advantage) * sin(w * time) * cos(w * time) + noise_v.y
+		var x_2 = x * cos(w_2 * time) + y * sin(w_2 * time)
+		var y_2 = - x * sin(w_2 * time) + y * cos(w_2 * time)
+		
+		var curve = Vector2(x_2, y_2) * 0.4
+		player_small_inst.position = normal_to_position(curve + Vector2(0.5, 0.5))
+		
+		if Input.is_action_just_pressed("select"):
+			stop_attacking = true
+			var distance = (player_small_inst.position - normal_to_position(Vector2(0.5, 0.5))).length()
+			var spear_damage = (max(1 - distance / 40, 0)) * damage_mult
+			damage_to_enemy(spear_damage)
+			SignalBus.end_combat_early.emit()
 
 
 func damage_to_player(damage_mult: float) -> void:
@@ -349,6 +437,8 @@ func start_enemy_attack(
 			start_attack_enemy_drill()
 		Enum.Minigame.ENEMY_FIST:
 			start_attack_enemy_fist()
+		Enum.Minigame.ENEMY_SPEAR:
+			start_attack_enemy_spear()
 
 
 func start_player_attack(
@@ -367,8 +457,10 @@ func start_player_attack(
 			start_attack_player_bullet()
 		Enum.Minigame.PLAYER_DRILL:
 			start_attack_player_drill()
-		Enum.Minigame.ENEMY_FIST:
+		Enum.Minigame.PLAYER_FIST:
 			start_attack_player_fist()
+		Enum.Minigame.PLAYER_SPEAR:
+			start_attack_player_spear()
 
 
 func end_enemy_attack() -> void:
@@ -397,14 +489,23 @@ func process_attack(delta, minigame: Enum.Minigame) -> void:
 			process_attack_enemy_fist(delta)
 		Enum.Minigame.PLAYER_FIST:
 			process_attack_player_fist(delta)
+		Enum.Minigame.ENEMY_SPEAR:
+			process_attack_enemy_spear(delta)
+		Enum.Minigame.PLAYER_SPEAR:
+			process_attack_player_spear(delta)
 
 
 func clear_board() -> void:
+	minigame_background.show_target()
 	print(bullet_list.size())
 	for b in bullet_list:
 		if is_instance_valid(b):
 			b.queue_free()
 	bullet_list.clear()
+	for a in arrows:
+		if is_instance_valid(a):
+			a.queue_free()
+	arrows.clear()
 
 
 func _on_player_mech_set_targeted_part(part):

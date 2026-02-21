@@ -264,6 +264,25 @@ func choose_target(player_mech: Mech) -> Enum.Part:
 			elif roll <= .7:
 				return sorted[1]
 			return get_non_destroyed_random_part()
+		Enum.Personality.SLOW:
+			var sorted: Array[Enum.Part] = get_mech_parts_by_health()
+			if not player_mech.is_part_healthy(Enum.Part.LEFT_LEG) or not player_mech.is_part_healthy(Enum.Part.RIGHT_LEG):
+				return sorted[0] if is_part_healthy(sorted[0]) else sorted[1]
+			if roll <= .3:
+				if player_mech.is_part_healthy(Enum.Part.LEFT_LEG):
+					return Enum.Part.LEFT_LEG
+				else:
+					return Enum.Part.RIGHT_LEG
+			elif roll <= .6:
+				if player_mech.is_part_healthy(Enum.Part.RIGHT_LEG):
+					return Enum.Part.RIGHT_LEG
+				else:
+					return Enum.Part.LEFT_LEG
+			elif roll <= .85:
+				return sorted[0] if is_part_healthy(sorted[0]) else sorted[1]
+			else:
+				return get_non_destroyed_random_part()
+			
 	return get_non_destroyed_random_part()
 
 
@@ -284,6 +303,13 @@ func choose_defence(player_mech: Mech) -> Enum.Part:
 			if roll <= .7:
 				return sorted[0] if is_part_healthy(sorted[0]) else sorted[1]
 			return sorted[1]
+		Enum.Personality.SLOW:
+			var sorted: Array[Enum.Part] = get_mech_parts_by_health()
+			if roll <= .5:
+				return sorted[0] if is_part_healthy(sorted[0]) else sorted[1]
+			elif roll <= .8:
+				return sorted[1]
+			return get_non_destroyed_random_part()
 	return get_non_destroyed_random_part()
 
 
@@ -356,15 +382,15 @@ func set_default_mech() -> void:
 	body.texture = Textures.body_default
 	add_child(body)
 	arm_left = MechPart.new(Enum.Part.LEFT_ARM)
-	arm_left.texture = Textures.arm_left_drill
-	arm_left.player_minigame = Enum.Minigame.PLAYER_DRILL
-	arm_left.enemy_minigame = Enum.Minigame.ENEMY_DRILL
+	arm_left.texture = Textures.arm_left_spear
+	arm_left.player_minigame = Enum.Minigame.PLAYER_SPEAR
+	arm_left.enemy_minigame = Enum.Minigame.ENEMY_SPEAR
 	add_child(arm_left)
 	if mech == Enum.Mech.PLAYER:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_fist
-		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
+		arm_right.texture = Textures.arm_right_spear
+		arm_right.player_minigame = Enum.Minigame.PLAYER_SPEAR
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_SPEAR
 	else:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
 		arm_right.texture = Textures.arm_right_fist
@@ -421,5 +447,100 @@ func generate_random_mech(combat_power: float, minigames: Array[Enum.Minigame]):
 	update_health_bars()
 
 
+func generate_boss(combat_power: float, current_city: int) -> void:
+	print("Generating Boss")
+	remove_all_parts()
+	if current_city == 1: # Great Wall
+		var right_minigame = Enum.Minigame.ENEMY_FIST
+		var left_minigame = Enum.Minigame.ENEMY_FIST
+		personality = Enum.Personality.SLOW
+		head = MechPart.new(Enum.Part.HEAD)
+		head.make_part(combat_power, Enum.Part.HEAD, Enum.Minigame.NONE, false, Textures.head_stone)
+		add_child(head)
+		body = MechPart.new(Enum.Part.BODY)
+		body.make_part(combat_power, Enum.Part.BODY, Enum.Minigame.NONE, false, Textures.body_stone)
+		add_child(body)
+		arm_left = MechPart.new(Enum.Part.LEFT_ARM)
+		arm_left.make_part(combat_power, Enum.Part.LEFT_ARM, left_minigame, false)
+		add_child(arm_left)
+		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+		arm_right.make_part(combat_power, Enum.Part.RIGHT_ARM, right_minigame, false)
+		add_child(arm_right)
+		leg_left = MechPart.new(Enum.Part.LEFT_LEG)
+		leg_left.make_part(combat_power, Enum.Part.LEFT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_left)
+		leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
+		leg_right.make_part(combat_power, Enum.Part.RIGHT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_right)
+		refresh_parts()
+		for part in parts:
+			part.max_health *= 1.5
+			part.health = part.max_health
+		leg_left.evasion *= 0.6
+		leg_right.evasion *= 0.6
+		arm_left.damage *= 1.5
+		arm_left.accuracy *= 0.8
+		arm_right.damage *= 1.5
+		arm_right.accuracy *= 0.8
+	elif current_city == 2: # Colloseum
+		var right_minigame = Enum.Minigame.ENEMY_SPEAR
+		var left_minigame = Enum.Minigame.ENEMY_SPEAR
+		personality = Enum.Personality.CHAOS
+		head = MechPart.new(Enum.Part.HEAD)
+		head.make_part(combat_power, Enum.Part.HEAD, Enum.Minigame.NONE, false)
+		add_child(head)
+		body = MechPart.new(Enum.Part.BODY)
+		body.make_part(combat_power, Enum.Part.BODY, Enum.Minigame.NONE, false)
+		add_child(body)
+		arm_left = MechPart.new(Enum.Part.LEFT_ARM)
+		arm_left.make_part(combat_power, Enum.Part.LEFT_ARM, left_minigame, false)
+		add_child(arm_left)
+		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+		arm_right.make_part(combat_power, Enum.Part.RIGHT_ARM, right_minigame, false)
+		add_child(arm_right)
+		leg_left = MechPart.new(Enum.Part.LEFT_LEG)
+		leg_left.make_part(combat_power, Enum.Part.LEFT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_left)
+		leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
+		leg_right.make_part(combat_power, Enum.Part.RIGHT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_right)
+		refresh_parts()
+		leg_left.evasion *= 1.5
+		leg_right.evasion *= 1.5
+		arm_left.damage *= 0.8
+		arm_left.accuracy *= 1.5
+		arm_right.damage *= 0.8
+		arm_right.accuracy *= 1.5
+	update_health_bars()
+
+
 func refresh_parts() -> void:
 	parts = [head, body, arm_left, arm_right, leg_left, leg_right]
+
+
+func duplicate_mech_parts() -> Mech:
+	var copy = Mech.new()
+	copy.head = head.create_copy()
+	copy.body = body.create_copy()
+	copy.arm_left = arm_left.create_copy()
+	copy.arm_right = arm_right.create_copy()
+	copy.leg_left = leg_left.create_copy()
+	copy.leg_right = leg_right.create_copy()
+	return copy
+
+
+func download_mech_parts(copy: Mech) -> void:
+	remove_all_parts()
+	head = copy.head.create_copy()
+	body = copy.body.create_copy()
+	arm_left = copy.arm_left.create_copy()
+	arm_right = copy.arm_right.create_copy()
+	leg_left = copy.leg_left.create_copy()
+	leg_right = copy.leg_right.create_copy()
+	refresh_parts()
+	for part in parts:
+		add_child(part)
+		if part.health <= 0:
+			part.health = 0
+			part.hide()
+	update_health_bars()

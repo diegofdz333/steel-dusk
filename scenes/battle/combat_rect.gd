@@ -1,9 +1,14 @@
 extends TextureRect
 
+var player_mech_game_save: Mech
+var player_mech_city_save: Mech
+var player_mech_combat_save: Mech
+
 var player_mech: Mech
 var enemy_mech: Mech
 var minigame_rect: MinigameRect
 var story_image: StoryImage
+var menu: Menu
 
 var current_city: int
 var current_stage: int
@@ -31,11 +36,19 @@ func _ready():
 	enemy_mech = $EnemyMech
 	minigame_rect = $MinigameRect
 	story_image = $StoryImage
+	menu = $Menu
 	
 	SignalBus.combat_finish.connect(on_winner)
+	SignalBus.end_combat_early.connect(on_end_combat_early)
+	SignalBus.restart.connect(on_restart)
 	current_city = 1
 	current_stage = 1
 	message_queue = []
+	
+	player_mech_combat_save = player_mech.duplicate_mech_parts()
+	player_mech_city_save = player_mech.duplicate_mech_parts()
+	player_mech_game_save = player_mech.duplicate_mech_parts()
+	
 	start_encounter()
 
 
@@ -52,7 +65,7 @@ func process_encounter(delta):
 	if in_combat:
 		process_combat(delta)
 		combat_time_left -= delta
-		if combat_time_left <= 0:
+		if in_combat and combat_time_left <= 0:
 			if mech_turn == Enum.Mech.ENEMY:
 				minigame_rect.end_enemy_attack()
 			else:
@@ -61,11 +74,14 @@ func process_encounter(delta):
 			in_combat = false
 			if mech_turn == Enum.Mech.ENEMY:
 				mech_turn = Enum.Mech.PLAYER
+				player_minigame = choose_player_minigame()
 				enemy_mech.enable_selection()
 				player_mech.hide_targeting()
 				player_mech.hide_defend()
 			else:
 				mech_turn = Enum.Mech.ENEMY
+				print("Choosing Next minigame")
+				enemy_minigame = choose_enemy_minigame()
 				player_mech.enable_selection()
 				enemy_mech.hide_targeting()
 				enemy_mech.hide_defend()
@@ -115,8 +131,11 @@ func process_story(_delta):
 		if not message_queue.is_empty():
 			SignalBus.display_message.emit(message_queue.pop_front())
 		else:
-			in_story = false
-			start_encounter()
+			if current_stage >= 1:
+				in_story = false
+				start_encounter()
+			else:
+				progress_to_next_stage()
 
 
 func start_story():
@@ -127,21 +146,84 @@ func start_story():
 
 
 func progress_to_next_stage() -> void:
-	print("Progressing to next stage")
-	if current_stage == 1:
-		current_stage = 2
-		message_queue = ["You continue approaching the main wonder of the ancient city. Another mech stands in your way."]
-		start_story()
-	elif current_stage == 2:
-		if current_city == 1:
-			current_stage = 2
+	print("Progressing to next stage: ", current_city, " ", current_stage)
+	if current_city == 1:
+		if current_stage == 0:
+			current_stage += 1
+			message_queue = ["Filler Intro"]
+			player_mech_city_save = player_mech.duplicate_mech_parts()
+			start_story()
+		elif current_stage == 1:
+			current_stage += 1
+			message_queue = ["You continue approaching the main wonder of the ancient city. Another mech stands in your way."]
+			start_story()
+		elif current_stage == 2:
+			current_stage += 1
+			if current_city == 1:
+				message_queue = [
+					"You reach the wonder, a great wall, the longest you have ever seen.",
+					"Both of its end burrow into the ground. Archeologists believe its full buried length may be longer than ten thousand miles.",
+					"Standing guardian is great mech, the protector of this site, and your target. You don't think this one will go down as easily as the others",
+					"You ready yourself to fight.",
+				]
+				story_image.show_great_wall()
+				start_story()
+		else:
+			current_stage = 0
+			current_city += 1
 			message_queue = [
-				"You reach the wonder, a great wall, the longest you have ever seen.",
-				"Both of its end burrow into the ground. Archeologists believe its full buried length may be longer than ten thousand miles.",
-				"Standing guardian is great mech, the protector of this site, and your target. You don't think this one will go down as easily as the others",
-				"You ready yourself to fight.",
+				"As you finish with basic repairs, you hear some noise from the radio in your mech. Static makes it hard to hear.",
+				"'Who are...'",
+				"'We thought... we... all humans... dead...'",
+				"'How long... since... it should have... two thousand...'",
+				"It grows quiet",
+				"You don't have much time to ponder what you just heard. You just took down one of the guardians.",
+				"The core will surly know it can be defeated now and ramp up its defences, you need to move on to the next guardian.",
 			]
 			story_image.show_great_wall()
+			player_mech_city_save = player_mech.duplicate_mech_parts()
+			start_story()
+	elif current_city == 2:
+		if current_stage == 0:
+			current_stage += 1
+			message_queue = [
+				"You begin your travel to the north of the continent, to the great city of Argoth, though most of it is destroyed by now",
+				"There are reports that it was a guardian from the ancient wonder under the city that caused this destruction.",
+				"You must find it, and take it down before it moves to defend the core.",
+			]
+			story_image.show_map(2)
+			player_mech_city_save = player_mech.duplicate_mech_parts()
+			start_story()
+		elif current_stage == 1:
+			current_stage += 1
+			message_queue = [
+				"You reach the city, there is rubble everywhere. Where it not for the mech, traversing this place would be impossible.",
+				"You reach the outskirts of the giant hole that was dug where the old city was found. You hear noise coming from behind a wrecked building.",
+				"It must be the guardian. You need to take down the weaker ones first though."
+			]
+			start_story()
+		elif current_stage == 2:
+			current_stage += 1
+			message_queue = [
+				"As you approach the center of the site you begin to see the wonder. A circular structure built of rock and concrete.",
+				"Archeologists believe that the ancient people of this city used it for some kind of sporting event",
+				"At its center sits the guardian. You don't get a chance to rest before it begins to dash towards you.",
+				"Looks like this site will get to witness at least one more duel",
+			]
+			story_image.show_colloseum()
+			start_story()
+		else:
+			current_stage = 0
+			current_city += 1
+			message_queue = [
+				"As you prepare to leave you hear the same static voice you heard at the great wall",
+				"'So few of us.... most of us are broken after...'",
+				"'The... is unusable... No more of us... be made'",
+				"'Before we all... We.. take you down with us.'",
+				"The voice grows quiet yet again.",
+				"Only the core remains now. You prepare for the fight.",
+			]
+			story_image.show_colloseum()
 			start_story()
 
 
@@ -197,6 +279,8 @@ func switch_parts(part_type: Enum.Part):
 			enemy_mech.add_child(enemy_mech.leg_right)
 	player_mech.update_health_bars()
 	enemy_mech.update_health_bars()
+	enemy_mech.refresh_parts()
+	player_mech.refresh_parts()
 
 
 func get_enemy_target() -> Enum.Part:
@@ -208,11 +292,31 @@ func get_enemy_defend() -> Enum.Part:
 
 
 func choose_player_minigame() -> Enum.Minigame:
-	return player_mech.choose_minigame()
+	var minigame: Enum.Minigame = player_mech.choose_minigame()
+	match minigame:
+		Enum.Minigame.PLAYER_BULLET:
+			SignalBus.display_message.emit('NEXT ATTACK: "BULLET"\nClick "Enter" to shoot target!')
+		Enum.Minigame.PLAYER_DRILL:
+			SignalBus.display_message.emit('NEXT ATTACK: "DRILL"\nKeep your target closer to the center for more damage!')
+		Enum.Minigame.PLAYER_FIST:
+			SignalBus.display_message.emit('NEXT ATTACK: "FIST"\nMatch the arrows!')
+		Enum.Minigame.PLAYER_SPEAR:
+			SignalBus.display_message.emit('NEXT ATTACK: "SPEAR"\nClick "Enter" when your aim is close to the target!')
+	return minigame
 
 
 func choose_enemy_minigame() -> Enum.Minigame:
-	return enemy_mech.choose_minigame()
+	var minigame: Enum.Minigame = enemy_mech.choose_minigame()
+	match minigame:
+		Enum.Minigame.ENEMY_BULLET:
+			SignalBus.display_message.emit('NEXT ATTACK: "BULLET"\nDodge the bullets!')
+		Enum.Minigame.ENEMY_DRILL:
+			SignalBus.display_message.emit('NEXT ATTACK: "DRILL"\nDodge the incomming drill attacks!')
+		Enum.Minigame.ENEMY_FIST:
+			SignalBus.display_message.emit('NEXT ATTACK: "FIST"\nDodge the inccoming punches!')
+		Enum.Minigame.ENEMY_SPEAR:
+			SignalBus.display_message.emit('NEXT ATTACK: "SPEAR"\nDodge the incoming spear at the last moment. Click "Enter" when you see a flash.')
+	return minigame
 
 
 func get_combat_power() -> float:
@@ -222,9 +326,16 @@ func get_combat_power() -> float:
 func start_encounter():
 	# mech_turn = Enum.Mech.ENEMY
 	# start_enemy_attack()
+	player_mech_combat_save = player_mech.duplicate_mech_parts()
+	
 	story_image.hide_image()
 	
-	enemy_mech.generate_random_mech(get_combat_power(), [Enum.Minigame.ENEMY_BULLET, Enum.Minigame.ENEMY_DRILL, Enum.Minigame.ENEMY_FIST])
+	if current_stage != 3:
+		var minigames: Array[Enum.Minigame] = [Enum.Minigame.ENEMY_BULLET, Enum.Minigame.ENEMY_DRILL, Enum.Minigame.ENEMY_FIST, Enum.Minigame.ENEMY_SPEAR]
+		#var minigames: Array[Enum.Minigame] = [Enum.Minigame.ENEMY_SPEAR]
+		enemy_mech.generate_random_mech(get_combat_power(), minigames)
+	else:
+		enemy_mech.generate_boss(get_combat_power(), current_city)
 	enemy_mech.show()
 	
 	SignalBus.display_message.emit('CLICK "ENTER" TO CONTINUE')
@@ -237,6 +348,8 @@ func start_encounter():
 	#player_mech.enable_selection()
 	#enemy_mech.disable_selection()
 	
+	#enemy_minigame = choose_enemy_minigame()
+	player_minigame = choose_player_minigame()
 	
 	in_combat = false
 	in_encounter = true
@@ -246,7 +359,6 @@ func start_enemy_attack():
 	in_combat = true
 	combat_time_left = 10
 	player_mech.set_target(get_enemy_target())
-	enemy_minigame = choose_enemy_minigame()
 	minigame_rect.start_enemy_attack(
 			enemy_minigame,
 			player_mech,
@@ -258,7 +370,6 @@ func start_player_attack():
 	in_combat = true
 	combat_time_left = 10
 	enemy_mech.set_defend(get_enemy_defend())
-	player_minigame = choose_player_minigame()
 	minigame_rect.start_player_attack(
 			player_minigame,
 			player_mech,
@@ -297,4 +408,27 @@ func on_winner(winner: Enum.Mech):
 		enemy_mech.enable_selection()
 	else:
 		#player_mech.destroy_mech()
+		$MinigameRect/MinigameBackground.show_defeated()
 		SignalBus.display_message.emit("You were defeated...")
+		menu.show_restart_menu()
+
+
+func on_end_combat_early() -> void:
+	combat_time_left = 0
+
+
+func on_restart(restart_index) -> void:
+	$MinigameRect/MinigameBackground.show_target()
+	match restart_index:
+		0: # Restart Combat
+			player_mech.download_mech_parts(player_mech_combat_save)
+			start_encounter()
+		1: # Restart City
+			player_mech.download_mech_parts(player_mech_city_save)
+			current_stage = 0
+			progress_to_next_stage()
+		2: # Restart Game
+			player_mech.download_mech_parts(player_mech_game_save)
+			current_stage = 0
+			current_city = 1
+			progress_to_next_stage()

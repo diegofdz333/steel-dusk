@@ -47,21 +47,42 @@ func _init(part: Enum.Part):
 	health = max_health
 
 
-func make_part(combat_power: float, part_type: Enum.Part, minigame: Enum.Minigame) -> void:
+func create_copy() -> MechPart:
+	var copy = MechPart.new(Enum.Part.HEAD)
+	copy.part = part
+	copy.evasion_mult = evasion_mult
+	copy.player_minigame = player_minigame
+	copy.enemy_minigame = enemy_minigame
+	copy.max_health = max_health
+	copy.health = health
+	copy.accuracy = accuracy
+	copy.evasion = evasion
+	copy.damage = damage
+	copy.texture = texture
+	return copy
+
+
+func make_part(
+		combat_power: float, 
+		part_type: Enum.Part, 
+		minigame: Enum.Minigame, 
+		is_random: bool = true,
+		override_texture: Variant = null
+) -> void:
 	match part_type:
 		Enum.Part.HEAD:
 			texture = Textures.head_default
 			evasion_mult = 1.75
-			max_health = random_power(combat_power)
+			max_health = random_power(combat_power) if is_random else combat_power
 		Enum.Part.BODY:
 			texture = Textures.body_default
 			evasion_mult = 0.7
-			max_health = random_power(combat_power) * 2
+			max_health = (random_power(combat_power) if is_random else combat_power) * 2
 		Enum.Part.LEFT_ARM:
 			evasion_mult = 1
-			max_health = random_power(combat_power)
-			accuracy = random_power(combat_power) / 2
-			damage = random_power(combat_power) / 10
+			max_health = random_power(combat_power) if is_random else combat_power
+			accuracy = (random_power(combat_power) if is_random else combat_power) / 2
+			damage = (random_power(combat_power) if is_random else combat_power) * 10 # TODO CHANGE TO / 10
 			match minigame:
 				Enum.Minigame.ENEMY_BULLET:
 					texture = Textures.arm_left_gun
@@ -75,11 +96,15 @@ func make_part(combat_power: float, part_type: Enum.Part, minigame: Enum.Minigam
 					texture = Textures.arm_left_fist
 					player_minigame = Enum.Minigame.PLAYER_FIST
 					enemy_minigame = Enum.Minigame.ENEMY_FIST
+				Enum.Minigame.ENEMY_SPEAR:
+					texture = Textures.arm_left_spear
+					player_minigame = Enum.Minigame.PLAYER_SPEAR
+					enemy_minigame = Enum.Minigame.ENEMY_SPEAR
 		Enum.Part.RIGHT_ARM:
 			evasion_mult = 1
-			max_health = random_power(combat_power)
-			accuracy = random_power(combat_power) / 2
-			damage = random_power(combat_power) / 10
+			max_health = (random_power(combat_power) if is_random else combat_power)
+			accuracy = (random_power(combat_power) if is_random else combat_power) / 2
+			damage = (random_power(combat_power) if is_random else combat_power) / 10
 			match minigame:
 				Enum.Minigame.ENEMY_BULLET:
 					texture = Textures.arm_right_gun
@@ -93,17 +118,23 @@ func make_part(combat_power: float, part_type: Enum.Part, minigame: Enum.Minigam
 					texture = Textures.arm_right_fist
 					player_minigame = Enum.Minigame.PLAYER_FIST
 					enemy_minigame = Enum.Minigame.ENEMY_FIST
+				Enum.Minigame.ENEMY_SPEAR:
+					texture = Textures.arm_right_spear
+					player_minigame = Enum.Minigame.PLAYER_SPEAR
+					enemy_minigame = Enum.Minigame.ENEMY_SPEAR
 		Enum.Part.LEFT_LEG:
 			evasion_mult = 1
-			max_health = random_power(combat_power)
-			evasion = random_power(combat_power) / 2
+			max_health = (random_power(combat_power) if is_random else combat_power)
+			evasion = (random_power(combat_power) if is_random else combat_power) / 2
 			texture = Textures.leg_left_default
 		Enum.Part.RIGHT_LEG:
 			evasion_mult = 1
-			max_health = random_power(combat_power)
-			evasion = random_power(combat_power) / 2
+			max_health = (random_power(combat_power) if is_random else combat_power)
+			evasion = (random_power(combat_power) if is_random else combat_power) / 2
 			texture = Textures.leg_right_default
 	health = max_health
+	if override_texture != null:
+		texture = override_texture
 
 
 func random_power(base_power: float) -> float:

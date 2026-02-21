@@ -13,3 +13,7 @@ signal enemy_hit_bullet()
 signal create_player_bullet(position: Vector2)
 
 signal combat_finish(winnder: Enum.Mech)
+
+signal end_combat_early()
+
+signal restart(restart_index: int)
