@@ -3,9 +3,14 @@ extends TextureRect
 var player_mech: Mech
 var enemy_mech: Mech
 var minigame_rect: MinigameRect
+var story_image: StoryImage
+
+var current_city: int
+var current_stage: int
 
 var in_encounter = false
 var in_looting = false
+var in_story = false
 
 var in_combat = false
 var mech_turn: Enum.Mech
@@ -19,21 +24,28 @@ var enemy_minigame: Enum.Minigame = Enum.Minigame.ENEMY_BULLET
 
 var loot_selection: Enum.Part
 
+var message_queue: Array[String] = []
+
 func _ready():
 	player_mech = $PlayerMech
 	enemy_mech = $EnemyMech
 	minigame_rect = $MinigameRect
+	story_image = $StoryImage
 	
 	SignalBus.combat_finish.connect(on_winner)
-	
+	current_city = 1
+	current_stage = 1
+	message_queue = []
 	start_encounter()
 
 
 func _process(delta):
 	if in_encounter:
 		process_encounter(delta)
-	if in_looting:
+	elif in_looting:
 		process_looting(delta)
+	elif in_story:
+		process_story(delta)
 
 
 func process_encounter(delta):
@@ -93,6 +105,44 @@ func process_looting(delta):
 			else:
 				loot_selection = new_loot_selection
 				enemy_mech.get_part_from_type(loot_selection).display_stats()
+	if Input.is_action_just_pressed("continue"):
+		in_looting = false
+		progress_to_next_stage()
+
+
+func process_story(_delta):
+	if Input.is_action_just_pressed("select") or Input.is_action_just_pressed("continue"):
+		if not message_queue.is_empty():
+			SignalBus.display_message.emit(message_queue.pop_front())
+		else:
+			in_story = false
+			start_encounter()
+
+
+func start_story():
+	in_story = true
+	enemy_mech.hide()
+	var first_message = message_queue.pop_front()
+	SignalBus.display_message.emit(first_message)
+
+
+func progress_to_next_stage() -> void:
+	print("Progressing to next stage")
+	if current_stage == 1:
+		current_stage = 2
+		message_queue = ["You continue approaching the main wonder of the ancient city. Another mech stands in your way."]
+		start_story()
+	elif current_stage == 2:
+		if current_city == 1:
+			current_stage = 2
+			message_queue = [
+				"You reach the wonder, a great wall, the longest you have ever seen.",
+				"Both of its end burrow into the ground. Archeologists believe its full buried length may be longer than ten thousand miles.",
+				"Standing guardian is great mech, the protector of this site, and your target. You don't think this one will go down as easily as the others",
+				"You ready yourself to fight.",
+			]
+			story_image.show_great_wall()
+			start_story()
 
 
 func switch_parts(part_type: Enum.Part):
@@ -165,11 +215,18 @@ func choose_enemy_minigame() -> Enum.Minigame:
 	return enemy_mech.choose_minigame()
 
 
+func get_combat_power() -> float:
+	return 100 + 50 * (current_city - 1) + 25 * (current_stage - 1)
+
+
 func start_encounter():
-	in_encounter = true
 	# mech_turn = Enum.Mech.ENEMY
 	# start_enemy_attack()
-	enemy_mech.personality = Enum.Personality.OPPORTUNISTIC
+	story_image.hide_image()
+	
+	enemy_mech.generate_random_mech(get_combat_power(), [Enum.Minigame.ENEMY_BULLET, Enum.Minigame.ENEMY_DRILL, Enum.Minigame.ENEMY_FIST])
+	enemy_mech.show()
+	
 	SignalBus.display_message.emit('CLICK "ENTER" TO CONTINUE')
 	
 	mech_turn = Enum.Mech.PLAYER
@@ -180,7 +237,9 @@ func start_encounter():
 	#player_mech.enable_selection()
 	#enemy_mech.disable_selection()
 	
+	
 	in_combat = false
+	in_encounter = true
 
 
 func start_enemy_attack():
@@ -219,14 +278,13 @@ func process_combat(delta):
 
 
 func on_winner(winner: Enum.Mech):
+	in_combat = false
+	in_encounter = false
 	print("Encounter Over!")
 	if mech_turn == Enum.Mech.ENEMY:
 		minigame_rect.end_enemy_attack()
 	else:
 		minigame_rect.end_player_attack()
-	combat_time_left = 0
-	in_combat = false
-	in_encounter = false
 	player_mech.hide_targeting()
 	player_mech.hide_defend()
 	enemy_mech.hide_targeting()

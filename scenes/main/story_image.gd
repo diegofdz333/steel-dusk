@@ -1,3 +1,5 @@
+class_name StoryImage
+
 extends TextureRect
 
 var is_shown
@@ -10,7 +12,7 @@ var a_pos
 var b_pos
 var is_moving_left
 
-const SCROLL_SPEED = 15
+const SCROLL_SPEED = 20
 const LOCK_DISTANCE = 5
 
 func _ready():

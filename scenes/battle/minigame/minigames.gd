@@ -291,8 +291,6 @@ func process_attack_player_fist(delta) -> void:
 					current_arrow_index = 0
 					for a in arrows:
 						a.show()
-		
-		
 
 
 func damage_to_player(damage_mult: float) -> void:

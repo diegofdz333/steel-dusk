@@ -80,37 +80,6 @@ func _process(_delta):
 				Enum.Part.RIGHT_LEG: pass
 
 
-func set_default_mech() -> void:
-	head = MechPart.new(Enum.Part.HEAD)
-	head.texture = Textures.head_default
-	add_child(head)
-	body = MechPart.new(Enum.Part.BODY)
-	body.texture = Textures.body_default
-	add_child(body)
-	arm_left = MechPart.new(Enum.Part.LEFT_ARM)
-	arm_left.texture = Textures.arm_left_drill
-	arm_left.player_minigame = Enum.Minigame.PLAYER_DRILL
-	arm_left.enemy_minigame = Enum.Minigame.ENEMY_DRILL
-	add_child(arm_left)
-	if mech == Enum.Mech.PLAYER:
-		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_fist
-		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
-	else:
-		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_fist
-		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
-	add_child(arm_right)
-	leg_left = MechPart.new(Enum.Part.LEFT_LEG)
-	leg_left.texture = Textures.leg_left_default
-	add_child(leg_left)
-	leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
-	leg_right.texture = Textures.leg_right_default
-	add_child(leg_right)
-
-
 func enable_selection() -> void:
 	selection_enabled = true
 	if mech == Enum.Mech.PLAYER and defended_part == null:
@@ -377,3 +346,80 @@ func choose_minigame() -> Enum.Minigame:
 		return Enum.Minigame.NONE
 	print("len = " + str(len(minigames)))
 	return minigames.pick_random()
+
+
+func set_default_mech() -> void:
+	head = MechPart.new(Enum.Part.HEAD)
+	head.texture = Textures.head_default
+	add_child(head)
+	body = MechPart.new(Enum.Part.BODY)
+	body.texture = Textures.body_default
+	add_child(body)
+	arm_left = MechPart.new(Enum.Part.LEFT_ARM)
+	arm_left.texture = Textures.arm_left_drill
+	arm_left.player_minigame = Enum.Minigame.PLAYER_DRILL
+	arm_left.enemy_minigame = Enum.Minigame.ENEMY_DRILL
+	add_child(arm_left)
+	if mech == Enum.Mech.PLAYER:
+		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+		arm_right.texture = Textures.arm_right_fist
+		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
+	else:
+		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+		arm_right.texture = Textures.arm_right_fist
+		arm_right.player_minigame = Enum.Minigame.PLAYER_FIST
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_FIST
+	add_child(arm_right)
+	leg_left = MechPart.new(Enum.Part.LEFT_LEG)
+	leg_left.texture = Textures.leg_left_default
+	add_child(leg_left)
+	leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
+	leg_right.texture = Textures.leg_right_default
+	add_child(leg_right)
+
+
+func remove_all_parts() -> void:
+	if is_instance_valid(head):
+		head.queue_free()
+	if is_instance_valid(body):
+		body.queue_free()
+	if is_instance_valid(arm_left):
+		arm_left.queue_free()
+	if is_instance_valid(arm_right):
+		arm_right.queue_free()
+	if is_instance_valid(leg_left):
+		leg_left.queue_free()
+	if is_instance_valid(leg_right):
+		leg_right.queue_free()
+
+
+func generate_random_mech(combat_power: float, minigames: Array[Enum.Minigame]):
+	remove_all_parts()
+	var right_minigame = minigames.pick_random()
+	var left_minigame = minigames.pick_random()
+	personality = Enum.Personality.OPPORTUNISTIC
+	head = MechPart.new(Enum.Part.HEAD)
+	head.make_part(combat_power, Enum.Part.HEAD, Enum.Minigame.NONE)
+	add_child(head)
+	body = MechPart.new(Enum.Part.BODY)
+	body.make_part(combat_power, Enum.Part.BODY, Enum.Minigame.NONE)
+	add_child(body)
+	arm_left = MechPart.new(Enum.Part.LEFT_ARM)
+	arm_left.make_part(combat_power, Enum.Part.LEFT_ARM, left_minigame)
+	add_child(arm_left)
+	arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+	arm_right.make_part(combat_power, Enum.Part.RIGHT_ARM, right_minigame)
+	add_child(arm_right)
+	leg_left = MechPart.new(Enum.Part.LEFT_LEG)
+	leg_left.make_part(combat_power, Enum.Part.LEFT_LEG, Enum.Minigame.NONE)
+	add_child(leg_left)
+	leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
+	leg_right.make_part(combat_power, Enum.Part.RIGHT_LEG, Enum.Minigame.NONE)
+	add_child(leg_right)
+	refresh_parts()
+	update_health_bars()
+
+
+func refresh_parts() -> void:
+	parts = [head, body, arm_left, arm_right, leg_left, leg_right]
