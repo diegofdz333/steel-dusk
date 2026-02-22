@@ -34,8 +34,8 @@ func _init(part: Enum.Part):
 		Enum.Part.RIGHT_ARM:
 			evasion_mult = 1
 			max_health = 100
-			accuracy = 500
-			damage = 1000
+			accuracy = 50
+			damage = 10
 		Enum.Part.LEFT_LEG:  
 			evasion_mult = 1
 			max_health = 100
@@ -82,7 +82,7 @@ func make_part(
 			evasion_mult = 1
 			max_health = random_power(combat_power) if is_random else combat_power
 			accuracy = (random_power(combat_power) if is_random else combat_power) / 2
-			damage = (random_power(combat_power) if is_random else combat_power) * 10 # TODO CHANGE TO / 10
+			damage = (random_power(combat_power) if is_random else combat_power) / 10
 			match minigame:
 				Enum.Minigame.ENEMY_BULLET:
 					texture = Textures.arm_left_gun

@@ -237,7 +237,6 @@ offset_bottom = 40.0
 texture = ExtResource("6_7fawv")
 
 [node name="NameLabel" type="Label" parent="." unique_id=568872358]
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5

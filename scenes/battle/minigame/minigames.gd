@@ -11,9 +11,9 @@ const ENEMY_ATTACK_DRILL_SPAWN_TIME = 0.10
 const ENEMY_ATTACK_FIST_SPAWN_TIME = 0.7
 const ENEMY_ATTACK_SPEAR_MIN_TIME = 2
 const ENEMY_ATTACK_SPEAR_MAX_TIME = 9
-const ENEMY_ATTACK_SPEAR_REACTION_TIME = 0.5
+const ENEMY_ATTACK_SPEAR_REACTION_TIME = 0.25
 const PLAYER_ATTACK_BULLET_ENEMY_SPEED = 50
-const PLAYER_ATTACK_DRILL_FORCE = 50
+const PLAYER_ATTACK_DRILL_FORCE = 70
 const PLAYER_ATTACK_FIST_BASE_ARROWS = 5
 const PLAYER_ATTACK_SPEAR_ACCELERATION = 5
 
@@ -24,11 +24,11 @@ const PLAYER_ATTACK_FIST_MAX_ARROWS = 9
 const ENEMY_ATTACK_BULLET_DAMAGE_MULT = 2
 const ENEMY_ATTACK_DRILL_DAMAGE_MULT = 2
 const ENEMY_ATTACK_FIST_DAMAGE_MULT = 3
-const ENEMY_ATTACK_SPEAR_DAMAGE_MULT = 6
-const PLAYER_ATTACK_BULLET_DAMAGE_MULT = 1
+const ENEMY_ATTACK_SPEAR_DAMAGE_MULT = 4
+const PLAYER_ATTACK_BULLET_DAMAGE_MULT = 1.5
 const PLAYER_ATTACK_DRILL_DAMAGE_MULT = 1
-const PLAYER_ATTACK_FIST_DAMAGE_MULT = 1
-const PLAYER_ATTACK_SPEAR_DAMAGE_MULT = 5
+const PLAYER_ATTACK_FIST_DAMAGE_MULT = 1.5
+const PLAYER_ATTACK_SPEAR_DAMAGE_MULT = 6
 
 # Base chance weights to hit any part assuming no targets
 const PARTS = [
@@ -42,6 +42,7 @@ const PARTS = [
 const BASE_HIT_PROBABILITIES: Array[float] = [1, 3, 2, 2, 2, 2]
 
 var minigame_background: MinigameBackground
+var audio: MuAudioStream
 
 var bullet: PackedScene = preload("res://scenes/battle/minigame/enemy/bullet.tscn")
 var drill: PackedScene = preload("res://scenes/battle/minigame/enemy/drill.tscn")
@@ -96,6 +97,7 @@ func _ready():
 	SignalBus.create_player_bullet.connect(on_create_player_bullet)
 	damage_mult = 1
 	minigame_background = $MinigameBackground
+	audio = $SoundEffectPlayer
 
 
 func set_combat_stats(accuracy: float, evasion: float, damage: float):
@@ -387,6 +389,7 @@ func damage_to_player(damage_mult: float) -> void:
 	#print("Player targets [ " + Utils.get_part_name(part) +" ] and deals " + str(final_damage) + " damage!")
 	if part != defended_player_part or randf() > DEFENCE_BLOCK_CHANCE:
 		SignalBus.damage_to_player.emit(part, final_damage)
+	audio.play_damage_audio()
 
 
 func damage_to_enemy(damage_mult: float) -> void:
@@ -395,6 +398,7 @@ func damage_to_enemy(damage_mult: float) -> void:
 	#print("Player targets [ " + Utils.get_part_name(part) +" ] and deals " + str(final_damage) + " damage!")
 	if part != defended_enemy_part or randf() > DEFENCE_BLOCK_CHANCE:
 		SignalBus.damage_to_enemy.emit(part, final_damage)
+	audio.play_damage_audio()
 
 
 func get_part_hit(target: Enum.Part) -> Enum.Part:

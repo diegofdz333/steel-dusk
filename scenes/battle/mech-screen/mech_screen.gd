@@ -382,15 +382,15 @@ func set_default_mech() -> void:
 	body.texture = Textures.body_default
 	add_child(body)
 	arm_left = MechPart.new(Enum.Part.LEFT_ARM)
-	arm_left.texture = Textures.arm_left_spear
-	arm_left.player_minigame = Enum.Minigame.PLAYER_SPEAR
-	arm_left.enemy_minigame = Enum.Minigame.ENEMY_SPEAR
+	arm_left.texture = Textures.arm_left_drill
+	arm_left.player_minigame = Enum.Minigame.PLAYER_DRILL
+	arm_left.enemy_minigame = Enum.Minigame.ENEMY_DRILL
 	add_child(arm_left)
 	if mech == Enum.Mech.PLAYER:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
-		arm_right.texture = Textures.arm_right_spear
-		arm_right.player_minigame = Enum.Minigame.PLAYER_SPEAR
-		arm_right.enemy_minigame = Enum.Minigame.ENEMY_SPEAR
+		arm_right.texture = Textures.arm_right_gun
+		arm_right.player_minigame = Enum.Minigame.PLAYER_BULLET
+		arm_right.enemy_minigame = Enum.Minigame.ENEMY_BULLET
 	else:
 		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
 		arm_right.texture = Textures.arm_right_fist
@@ -476,12 +476,12 @@ func generate_boss(combat_power: float, current_city: int) -> void:
 		for part in parts:
 			part.max_health *= 1.5
 			part.health = part.max_health
-		leg_left.evasion *= 0.6
-		leg_right.evasion *= 0.6
-		arm_left.damage *= 1.5
-		arm_left.accuracy *= 0.8
-		arm_right.damage *= 1.5
-		arm_right.accuracy *= 0.8
+		leg_left.evasion += -50
+		leg_right.evasion += -50
+		arm_left.damage += 50
+		arm_left.accuracy += -50
+		arm_right.damage += 50
+		arm_right.accuracy += -50
 	elif current_city == 2: # Colloseum
 		var right_minigame = Enum.Minigame.ENEMY_SPEAR
 		var left_minigame = Enum.Minigame.ENEMY_SPEAR
@@ -505,12 +505,35 @@ func generate_boss(combat_power: float, current_city: int) -> void:
 		leg_right.make_part(combat_power, Enum.Part.RIGHT_LEG, Enum.Minigame.NONE, false)
 		add_child(leg_right)
 		refresh_parts()
-		leg_left.evasion *= 1.5
-		leg_right.evasion *= 1.5
-		arm_left.damage *= 0.8
-		arm_left.accuracy *= 1.5
-		arm_right.damage *= 0.8
-		arm_right.accuracy *= 1.5
+		leg_left.evasion+= 50
+		leg_right.evasion -= 50
+		arm_left.damage -= 50
+		arm_left.accuracy += 50
+		arm_right.damage -= 50
+		arm_right.accuracy += 50
+	elif current_city == 3: # Liberty
+		var right_minigame = Enum.Minigame.ENEMY_BULLET
+		var left_minigame = Enum.Minigame.ENEMY_DRILL
+		personality = Enum.Personality.OPPORTUNISTIC
+		head = MechPart.new(Enum.Part.HEAD)
+		head.make_part(combat_power + 100, Enum.Part.HEAD, Enum.Minigame.NONE, false)
+		add_child(head)
+		body = MechPart.new(Enum.Part.BODY)
+		body.make_part(combat_power + 100, Enum.Part.BODY, Enum.Minigame.NONE, false)
+		add_child(body)
+		arm_left = MechPart.new(Enum.Part.LEFT_ARM)
+		arm_left.make_part(combat_power + 100, Enum.Part.LEFT_ARM, left_minigame, false)
+		add_child(arm_left)
+		arm_right = MechPart.new(Enum.Part.RIGHT_ARM)
+		arm_right.make_part(combat_power + 100, Enum.Part.RIGHT_ARM, right_minigame, false)
+		add_child(arm_right)
+		leg_left = MechPart.new(Enum.Part.LEFT_LEG)
+		leg_left.make_part(combat_power + 100, Enum.Part.LEFT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_left)
+		leg_right = MechPart.new(Enum.Part.RIGHT_LEG)
+		leg_right.make_part(combat_power + 100, Enum.Part.RIGHT_LEG, Enum.Minigame.NONE, false)
+		add_child(leg_right)
+		refresh_parts()
 	update_health_bars()
 
 

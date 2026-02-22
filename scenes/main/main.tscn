@@ -2,18 +2,21 @@
 
 [ext_resource type="Texture2D" uid="uid://bfs7dnp6uo71x" path="res://assets/background/grid-test-2.png" id="1_iuonh"]
 [ext_resource type="Texture2D" uid="uid://ded4cnw71i2bb" path="res://assets/background/battle-menu.png" id="2_iuonh"]
+[ext_resource type="Texture2D" uid="uid://c84s57yyyqrhm" path="res://assets/background/home.png" id="2_pg34l"]
 [ext_resource type="Script" uid="uid://dtjnod26mtxau" path="res://scenes/battle/combat_rect.gd" id="3_a8run"]
 [ext_resource type="PackedScene" uid="uid://bcacp0gmjtv3y" path="res://scenes/battle/mech-screen/mech_screen.tscn" id="3_k2fmo"]
 [ext_resource type="Texture2D" uid="uid://cyip0ibdoie25" path="res://assets/background/battle-menu-bottom.png" id="3_l3cfh"]
+[ext_resource type="AudioStream" uid="uid://c1txxquakgou4" path="res://assets/music/8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3" id="3_m4h2d"]
 [ext_resource type="Texture2D" uid="uid://badoqvijk4p6q" path="res://assets/background/minigames/drill_target.png" id="4_blune"]
 [ext_resource type="Script" uid="uid://chd45g26ttxua" path="res://scenes/battle/minigame/minigames.gd" id="4_hujxm"]
+[ext_resource type="Script" uid="uid://dv0s8qpsy0lf3" path="res://scenes/main/audio_stream_player.gd" id="4_p8abn"]
 [ext_resource type="PackedScene" uid="uid://cenandd76a37t" path="res://scenes/battle/minigame/player/player.tscn" id="5_6q06x"]
-[ext_resource type="Texture2D" uid="uid://dp32fqebebnsu" path="res://assets/background/wonders/map.png" id="5_raeie"]
 [ext_resource type="Script" uid="uid://cm4nryrny8chk" path="res://scenes/main/story_image.gd" id="6_ou6is"]
 [ext_resource type="PackedScene" uid="uid://ba6o5q4au0rbs" path="res://scenes/battle/minigame/player/player_small.tscn" id="8_ouso4"]
 [ext_resource type="FontFile" uid="uid://brmfpu1mdjgyw" path="res://assets/ui/fonts/LunchMenu.ttf" id="8_yyfjg"]
 [ext_resource type="Script" uid="uid://cnvf1bks221sq" path="res://scenes/battle/combat_dialogue.gd" id="9_b1x3f"]
 [ext_resource type="PackedScene" uid="uid://x2wqu51v6pom" path="res://scenes/battle/minigame/enemy/enemy.tscn" id="11_7smn1"]
+[ext_resource type="Texture2D" uid="uid://dfd702cyhol2h" path="res://assets/background/wonders/map-small.png" id="11_necax"]
 [ext_resource type="PackedScene" uid="uid://bok4pk52mtwko" path="res://scenes/battle/minigame/player/weapons/player_bullet.tscn" id="12_raeie"]
 [ext_resource type="Script" uid="uid://dcfecdgh6qn2k" path="res://scenes/main/minigame_background.gd" id="13_hxu8e"]
 [ext_resource type="Script" uid="uid://8k75in6n1inl" path="res://scenes/main/menu.gd" id="17_r4lks"]
@@ -31,28 +34,41 @@ size = Vector2(139, 169)
 [node name="Camera" type="Camera2D" parent="." unique_id=1532137061]
 offset = Vector2(160, 120)
 
-[node name="BackgroundUnseen" type="TextureRect" parent="." unique_id=421719560]
-visible = false
-z_index = -999
-offset_left = -180.0
-offset_top = -120.0
-offset_right = 460.0
-offset_bottom = 360.0
-texture = ExtResource("1_iuonh")
-
 [node name="CombatRect" type="TextureRect" parent="." unique_id=398353]
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("2_iuonh")
 script = ExtResource("3_a8run")
 
-[node name="StoryImage" type="TextureRect" parent="CombatRect" unique_id=709715498]
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="CombatRect" unique_id=2141367320]
+stream = ExtResource("3_m4h2d")
+volume_db = -16.947
+parameters/looping = true
+script = ExtResource("4_p8abn")
+
+[node name="Home" type="TextureRect" parent="CombatRect" unique_id=343215163]
+z_index = 10
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 240.0
+texture = ExtResource("2_pg34l")
+
+[node name="BackgroundUnseen" type="TextureRect" parent="CombatRect" unique_id=421719560]
 visible = false
+z_index = -999
+layout_mode = 0
+offset_left = -180.0
+offset_top = -120.0
+offset_right = 460.0
+offset_bottom = 360.0
+texture = ExtResource("1_iuonh")
+
+[node name="StoryImage" type="TextureRect" parent="CombatRect" unique_id=709715498]
 z_index = -8
 layout_mode = 0
-offset_right = 850.0
-offset_bottom = 653.0
-texture = ExtResource("5_raeie")
+offset_right = 297.0
+offset_bottom = 200.0
+texture = ExtResource("11_necax")
 script = ExtResource("6_ou6is")
 
 [node name="Background" type="TextureRect" parent="CombatRect" unique_id=527798850]
@@ -112,6 +128,9 @@ offset_bottom = 240.0
 texture = ExtResource("4_blune")
 script = ExtResource("13_hxu8e")
 
+[node name="SoundEffectPlayer" type="AudioStreamPlayer" parent="CombatRect/MinigameRect" unique_id=537841996]
+script = ExtResource("4_p8abn")
+
 [node name="PlayerMech" parent="CombatRect" unique_id=1451565273 instance=ExtResource("3_k2fmo")]
 layout_mode = 0
 
@@ -144,6 +163,7 @@ lINE 2"
 script = ExtResource("9_b1x3f")
 
 [node name="Menu" type="Control" parent="CombatRect" unique_id=1501439830]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0

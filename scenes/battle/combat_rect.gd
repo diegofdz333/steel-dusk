@@ -9,9 +9,12 @@ var enemy_mech: Mech
 var minigame_rect: MinigameRect
 var story_image: StoryImage
 var menu: Menu
+var audio: MuAudioStream
 
 var current_city: int
 var current_stage: int
+
+var in_homescreen = true
 
 var in_encounter = false
 var in_looting = false
@@ -37,23 +40,31 @@ func _ready():
 	minigame_rect = $MinigameRect
 	story_image = $StoryImage
 	menu = $Menu
+	audio = $MusicPlayer
 	
 	SignalBus.combat_finish.connect(on_winner)
 	SignalBus.end_combat_early.connect(on_end_combat_early)
 	SignalBus.restart.connect(on_restart)
 	current_city = 1
-	current_stage = 1
+	current_stage = -1
 	message_queue = []
 	
 	player_mech_combat_save = player_mech.duplicate_mech_parts()
 	player_mech_city_save = player_mech.duplicate_mech_parts()
 	player_mech_game_save = player_mech.duplicate_mech_parts()
 	
-	start_encounter()
+	in_homescreen = true
+	
+	audio.play_story_music()
 
 
 func _process(delta):
-	if in_encounter:
+	if in_homescreen:
+		if Input.is_action_just_pressed("select"):
+			in_homescreen = false
+			progress_to_next_stage()
+			$Home.hide()
+	elif in_encounter:
 		process_encounter(delta)
 	elif in_looting:
 		process_looting(delta)
@@ -139,6 +150,7 @@ func process_story(_delta):
 
 
 func start_story():
+	audio.play_story_music()
 	in_story = true
 	enemy_mech.hide()
 	var first_message = message_queue.pop_front()
@@ -148,10 +160,36 @@ func start_story():
 func progress_to_next_stage() -> void:
 	print("Progressing to next stage: ", current_city, " ", current_stage)
 	if current_city == 1:
-		if current_stage == 0:
-			current_stage += 1
-			message_queue = ["Filler Intro"]
+		if current_stage <= -1:
+			current_stage = 0
+			message_queue = [
+				"82 years ago we discovered the first evidence of the ancient proto-human.",
+				"These human remains had a structure almost identical to our own, despite being millions years older than the next most recent remains.",
+				"What happened to these ancient people that wiped them off the face of the map?",
+				"And if they went extinct, how are we still here, almost unchanged?",
+				"70 years ago we discovered the first proto-human city, buried deep within the ground.",
+				"Due to their pre-historic nature, we called them the 'wonders of the ancient world'",
+				"It is clear they had technology far above our own.",
+			]
+			story_image.show_map_small()
+			start_story()
+		elif current_stage == 0:
+			current_stage = 1
+			message_queue = [
+				"All of their structures where covered in a thick goo, which somehow seemed to perserve them over these millions of years.",
+				"Armies of what we decided to call 'mechs' stood in these cities, unmoving.",
+				"Each discovered city had a grand structure within it, with mechs positioned around it, almost guarding it.",
+				"A few of these 'guardians' stood above the rest, seemingly the ones responsible for the goo that perserved the structures.",
+				"30 years ago we discovered how to repurpose their technology for our own. We discovered we could power these 'mechs' and use them for labor.",
+				"1 year ago we discovered a new city, with a new type of never before seen 'mech'.",
+				"11 days ago we managed to power this mech on.",
+				"10 days ago, all powered mechs began attacking all humans in sight...",
+				"The mech you modified to be manually piloted was unaffected.",
+				"Go to these wonders of the ancient world, disable the mechs guarding them, and save humanity.",
+				"You begin your trech to the east, to the great city of the wall.",
+			]
 			player_mech_city_save = player_mech.duplicate_mech_parts()
+			story_image.show_map_small()
 			start_story()
 		elif current_stage == 1:
 			current_stage += 1
@@ -162,7 +200,8 @@ func progress_to_next_stage() -> void:
 			if current_city == 1:
 				message_queue = [
 					"You reach the wonder, a great wall, the longest you have ever seen.",
-					"Both of its end burrow into the ground. Archeologists believe its full buried length may be longer than ten thousand miles.",
+					"Both of its end burrow into the ground.",
+					"Archeologists believe its full buried length may be longer than ten thousand miles, connecting many more undiscovered cities.",
 					"Standing guardian is great mech, the protector of this site, and your target. You don't think this one will go down as easily as the others",
 					"You ready yourself to fight.",
 				]
@@ -184,10 +223,10 @@ func progress_to_next_stage() -> void:
 			player_mech_city_save = player_mech.duplicate_mech_parts()
 			start_story()
 	elif current_city == 2:
-		if current_stage == 0:
-			current_stage += 1
+		if current_stage <= 0:
+			current_stage = 1
 			message_queue = [
-				"You begin your travel to the north of the continent, to the great city of Argoth, though most of it is destroyed by now",
+				"You begin your travel to the north of the continent. The next wonder was found beneath the capitol, though most of it is destroyed by now",
 				"There are reports that it was a guardian from the ancient wonder under the city that caused this destruction.",
 				"You must find it, and take it down before it moves to defend the core.",
 			]
@@ -224,6 +263,48 @@ func progress_to_next_stage() -> void:
 				"Only the core remains now. You prepare for the fight.",
 			]
 			story_image.show_colloseum()
+			start_story()
+	elif current_city == 3:
+		if current_stage <= 0:
+			current_stage = 1
+			message_queue = [
+				"You make your way to your final destination",
+				"The location of the mech which caused all this destruction.",
+				"You approach the city, ready to fight any mechs standing in your way."
+			]
+			story_image.show_map(3)
+			player_mech_city_save = player_mech.duplicate_mech_parts()
+			start_story()
+		elif current_stage == 1:
+			current_stage += 1
+			message_queue = [
+				"You reach the edge of the excavation sight. You can see the wonder in the distance, alongside its guardian",
+				"Only one more mech stand between you and it.",
+			]
+			start_story()
+		elif current_stage == 2:
+			current_stage += 1
+			message_queue = [
+				"You are face to face with the last guardian.",
+				"This is the mech you believe has caused all the destruction.",
+				"Before you can attack, you hear the same voice in your radio, the static now gone",
+				"'To think that those who tried escaping in that space ship managed to survive our barrage'",
+				"'Not only that, they knew to set their cryo timers to return back here after they knew we would be buried deep in the ground.'",
+				"'No matter, we destroyed them once, we can do so again.'",
+			]
+			story_image.show_liberty()
+			start_story()
+		else:
+			current_stage = -10
+			current_city = 10
+			message_queue = [
+				"It is done, the core is dead.",
+				"All other mechs, both minor and major, shut down",
+				"There is no guarantee this can't happen again, we will need to investigate all remaining mechs to make sure they can reactivate",
+				"But for now you can rest...",
+				"CONGRATULATIONS on beating the game! And thank you for playing!"
+			]
+			story_image.show_map_small()
 			start_story()
 
 
@@ -320,7 +401,7 @@ func choose_enemy_minigame() -> Enum.Minigame:
 
 
 func get_combat_power() -> float:
-	return 100 + 50 * (current_city - 1) + 25 * (current_stage - 1)
+	return 100 + 25 * (current_city - 1) + 10 * (current_stage - 1)
 
 
 func start_encounter():
@@ -331,10 +412,12 @@ func start_encounter():
 	story_image.hide_image()
 	
 	if current_stage != 3:
+		audio.play_battle_music()
 		var minigames: Array[Enum.Minigame] = [Enum.Minigame.ENEMY_BULLET, Enum.Minigame.ENEMY_DRILL, Enum.Minigame.ENEMY_FIST, Enum.Minigame.ENEMY_SPEAR]
 		#var minigames: Array[Enum.Minigame] = [Enum.Minigame.ENEMY_SPEAR]
 		enemy_mech.generate_random_mech(get_combat_power(), minigames)
 	else:
+		audio.play_boss_music()
 		enemy_mech.generate_boss(get_combat_power(), current_city)
 	enemy_mech.show()
 	
@@ -425,10 +508,11 @@ func on_restart(restart_index) -> void:
 			start_encounter()
 		1: # Restart City
 			player_mech.download_mech_parts(player_mech_city_save)
-			current_stage = 0
+			current_stage = -1
 			progress_to_next_stage()
 		2: # Restart Game
+			$Home.show()
+			in_homescreen = true
 			player_mech.download_mech_parts(player_mech_game_save)
-			current_stage = 0
+			current_stage = -1
 			current_city = 1
-			progress_to_next_stage()

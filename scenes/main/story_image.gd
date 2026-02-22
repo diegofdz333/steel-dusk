@@ -10,6 +10,8 @@ var is_map
 var wall_texture = preload("res://assets/background/wonders/great-wall.png")
 var map_texture = preload("res://assets/background/wonders/map.png")
 var colloseum_texture = preload("res://assets/background/wonders/colloseum.png")
+var liberty_texture = preload("res://assets/background/wonders/liberty.png")
+var map_small_texture = preload("res://assets/background/wonders/map-small.png")
 
 # movement will go: center -> a -> b -> a -> ...
 var center_pos
@@ -81,14 +83,47 @@ func show_colloseum():
 	show()
 
 
+func show_liberty():
+	hide_image()
+	texture = liberty_texture
+	size =  Vector2(640, 302)
+	is_shown = true
+	is_map = false
+	a_pos = Vector2(40, -50)
+	center_pos = a_pos
+	b_pos = Vector2(-130, -50)
+	position = center_pos
+	show()
+
+
 func show_map(destination: int):
 	hide_image()
 	texture = map_texture
 	size =  Vector2(850, 653)
 	is_shown = true
 	is_map = true
-	a_pos = Vector2(-370, -270)
-	b_pos = Vector2(-280, -150)
+	if destination == 3:
+		a_pos = Vector2(-280, -150)
+		b_pos = Vector2(-216, -185)
+	if destination == 2:
+		a_pos = Vector2(-370, -270)
+		b_pos = Vector2(-280, -150)
+	if destination == 1:
+		a_pos = Vector2(-150, -150)
+		b_pos = Vector2(-380, -330)
 	position = a_pos
 	time = 0
+	show()
+
+
+func show_map_small():
+	hide_image()
+	texture = map_small_texture
+	size =  Vector2(297, 200)
+	is_shown = true
+	is_map = false
+	a_pos = Vector2(0, 0)
+	center_pos = a_pos
+	b_pos = Vector2(0, 0)
+	position = center_pos
 	show()
