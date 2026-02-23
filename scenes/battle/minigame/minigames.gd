@@ -5,15 +5,16 @@ extends Control
 # Chance for a hit to be ignored if that part is defended
 const DEFENCE_BLOCK_CHANCE: float = 0.66
 const TOTAL_ATTACK_TIME: float = 10
+const PLAYER_INVIS_SECONDS: float = 0.75
 
 const ENEMY_ATTACK_BULLET_SPAWN_TIME = 0.10
 const ENEMY_ATTACK_DRILL_SPAWN_TIME = 0.10
 const ENEMY_ATTACK_FIST_SPAWN_TIME = 0.7
 const ENEMY_ATTACK_SPEAR_MIN_TIME = 2
 const ENEMY_ATTACK_SPEAR_MAX_TIME = 9
-const ENEMY_ATTACK_SPEAR_REACTION_TIME = 0.25
-const PLAYER_ATTACK_BULLET_ENEMY_SPEED = 50
-const PLAYER_ATTACK_DRILL_FORCE = 70
+const ENEMY_ATTACK_SPEAR_REACTION_TIME = 0.35
+const PLAYER_ATTACK_BULLET_ENEMY_SPEED = 80
+const PLAYER_ATTACK_DRILL_FORCE = 60
 const PLAYER_ATTACK_FIST_BASE_ARROWS = 5
 const PLAYER_ATTACK_SPEAR_ACCELERATION = 5
 
@@ -23,12 +24,14 @@ const PLAYER_ATTACK_FIST_MAX_ARROWS = 9
 
 const ENEMY_ATTACK_BULLET_DAMAGE_MULT = 2
 const ENEMY_ATTACK_DRILL_DAMAGE_MULT = 2
-const ENEMY_ATTACK_FIST_DAMAGE_MULT = 3
-const ENEMY_ATTACK_SPEAR_DAMAGE_MULT = 4
+const ENEMY_ATTACK_FIST_DAMAGE_MULT = 2
+const ENEMY_ATTACK_SPEAR_DAMAGE_MULT = 5
 const PLAYER_ATTACK_BULLET_DAMAGE_MULT = 1.5
-const PLAYER_ATTACK_DRILL_DAMAGE_MULT = 1
-const PLAYER_ATTACK_FIST_DAMAGE_MULT = 1.5
-const PLAYER_ATTACK_SPEAR_DAMAGE_MULT = 6
+const PLAYER_ATTACK_DRILL_DAMAGE_MULT = 1.5
+const PLAYER_ATTACK_FIST_DAMAGE_MULT = 1.2
+const PLAYER_ATTACK_SPEAR_DAMAGE_MULT = 7
+
+const ATTACKER_ADVANTAGE_DAMPENER = 100
 
 # Base chance weights to hit any part assuming no targets
 const PARTS = [
@@ -39,7 +42,7 @@ const PARTS = [
 	Enum.Part.LEFT_LEG,
 	Enum.Part.RIGHT_LEG
 ]
-const BASE_HIT_PROBABILITIES: Array[float] = [1, 3, 2, 2, 2, 2]
+const BASE_HIT_PROBABILITIES: Array[float] = [0.8, 3, 2, 2, 2, 2]
 
 var minigame_background: MinigameBackground
 var audio: MuAudioStream
@@ -54,6 +57,7 @@ var arrow: PackedScene = preload("res://scenes/battle/minigame/player/weapons/ar
 @export var player_bullet: PackedScene
 
 var attack_time: float = 0
+var player_invisibility_time_left: float = 0
 
 var player_inst: Player
 var player_small_inst: Player
@@ -101,7 +105,7 @@ func _ready():
 
 
 func set_combat_stats(accuracy: float, evasion: float, damage: float):
-	attacker_advantage = 2 ** ((accuracy - evasion) / 100)
+	attacker_advantage = (accuracy + ATTACKER_ADVANTAGE_DAMPENER) / (evasion + ATTACKER_ADVANTAGE_DAMPENER)
 	self.accuracy = accuracy
 	self.damage = damage
 
@@ -128,7 +132,8 @@ func process_attack_enemy_bullets(delta) -> void:
 		spawn_timer += ENEMY_ATTACK_BULLET_SPAWN_TIME / attacker_advantage
 		var bullet_inst: Bullet = bullet.instantiate()
 		bullet_inst.combat_area = $CombatArea
-		bullet_inst.position = normal_to_position(Vector2(randf() * 0.9 + 0.05, -.1))
+		bullet_inst.position = normal_to_position(Vector2(randf(), -.1))
+		bullet_inst.z_index = -1;
 		bullet_inst.target_mech = Enum.Mech.PLAYER
 		bullet_list.append(bullet_inst)
 		add_child(bullet_inst)
@@ -151,8 +156,9 @@ func process_attack_enemy_drill(delta) -> void:
 		spawn_timer += ENEMY_ATTACK_DRILL_SPAWN_TIME / attacker_advantage
 		var drill_inst: Drill = drill.instantiate()
 		drill_inst.position = normal_to_position(
-			Vector2(randf() * 0.9 + 0.05, randf() * 0.9 + 0.05)
+			Vector2(randf() * 1.1 - 0.05, randf() * 1.1 - 0.05)
 		)
+		drill_inst.z_index = -1;
 		bullet_list.append(drill_inst)
 		add_child(drill_inst)
 
@@ -365,14 +371,18 @@ func process_attack_player_spear(delta) -> void:
 			noise.get_noise_1d(time + 1000) # Offset to decouple X and Y
 		) / attacker_advantage
 		
+		# (base trig + noise) * rotation_mult * centering_mult
+		var max_displacement_x = (1 + abs(noise_v.x)) * sqrt(2) * 2
+		var max_displacement_y = (1 + abs(noise_v.y)) * sqrt(2) * 2
+		
 		var w = 5 / attacker_advantage
 		var w_2 = 2 / attacker_advantage
-		var x = min(1, 1 / attacker_advantage) * sin(w * time) + noise_v.x
-		var y = min(1, 1 / attacker_advantage) * sin(w * time) * cos(w * time) + noise_v.y
-		var x_2 = x * cos(w_2 * time) + y * sin(w_2 * time)
-		var y_2 = - x * sin(w_2 * time) + y * cos(w_2 * time)
+		var x = sin(w * time) + noise_v.x
+		var y = sin(w * time) * cos(w * time) + noise_v.y
+		var x_2 =  (x * cos(w_2 * time) + y * sin(w_2 * time)) / max_displacement_x
+		var y_2 = (-x * sin(w_2 * time) + y * cos(w_2 * time)) / max_displacement_y
 		
-		var curve = Vector2(x_2, y_2) * 0.4
+		var curve = Vector2(x_2, y_2)
 		player_small_inst.position = normal_to_position(curve + Vector2(0.5, 0.5))
 		
 		if Input.is_action_just_pressed("select"):
@@ -384,6 +394,9 @@ func process_attack_player_spear(delta) -> void:
 
 
 func damage_to_player(damage_mult: float) -> void:
+	if player_invisibility_time_left > 0:
+		return
+	player_invisibility_time_left = PLAYER_INVIS_SECONDS
 	var part = get_part_hit(targeted_player_part)
 	var final_damage = damage * damage_mult
 	#print("Player targets [ " + Utils.get_part_name(part) +" ] and deals " + str(final_damage) + " damage!")
@@ -480,6 +493,8 @@ func end_player_attack() -> void:
 
 
 func process_attack(delta, minigame: Enum.Minigame) -> void:
+	if player_invisibility_time_left > 0:
+		player_invisibility_time_left -= delta
 	match minigame:
 		Enum.Minigame.PLAYER_BULLET:
 			pass

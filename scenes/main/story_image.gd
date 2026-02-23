@@ -13,6 +13,8 @@ var colloseum_texture = preload("res://assets/background/wonders/colloseum.png")
 var liberty_texture = preload("res://assets/background/wonders/liberty.png")
 var map_small_texture = preload("res://assets/background/wonders/map-small.png")
 
+var tutorial_keys_texture = preload("res://assets/background/tutorial/keys.png")
+
 # movement will go: center -> a -> b -> a -> ...
 var center_pos
 var a_pos
@@ -120,6 +122,19 @@ func show_map_small():
 	hide_image()
 	texture = map_small_texture
 	size =  Vector2(297, 200)
+	is_shown = true
+	is_map = false
+	a_pos = Vector2(0, 0)
+	center_pos = a_pos
+	b_pos = Vector2(0, 0)
+	position = center_pos
+	show()
+
+
+func show_tutorial_keys():
+	hide_image()
+	texture = tutorial_keys_texture
+	size =  Vector2(320, 240)
 	is_shown = true
 	is_map = false
 	a_pos = Vector2(0, 0)

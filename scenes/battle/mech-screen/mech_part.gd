@@ -21,8 +21,8 @@ func _init(part: Enum.Part):
 	# Default values
 	match part:
 		Enum.Part.HEAD:      
-			evasion_mult = 1.75
-			max_health = 100
+			evasion_mult = 3
+			max_health = 120
 		Enum.Part.BODY:
 			evasion_mult = 0.7
 			max_health = 200
@@ -72,14 +72,15 @@ func make_part(
 	match part_type:
 		Enum.Part.HEAD:
 			texture = Textures.head_default
-			evasion_mult = 1.75
-			max_health = random_power(combat_power) if is_random else combat_power
+			evasion_mult = 2.5
+			max_health = (random_power(combat_power) if is_random else combat_power) * 1.2
 		Enum.Part.BODY:
 			texture = Textures.body_default
 			evasion_mult = 0.7
 			max_health = (random_power(combat_power) if is_random else combat_power) * 2
 		Enum.Part.LEFT_ARM:
 			evasion_mult = 1
+			z_index += 1
 			max_health = random_power(combat_power) if is_random else combat_power
 			accuracy = (random_power(combat_power) if is_random else combat_power) / 2
 			damage = (random_power(combat_power) if is_random else combat_power) / 10
@@ -102,6 +103,7 @@ func make_part(
 					enemy_minigame = Enum.Minigame.ENEMY_SPEAR
 		Enum.Part.RIGHT_ARM:
 			evasion_mult = 1
+			z_index += 1
 			max_health = (random_power(combat_power) if is_random else combat_power)
 			accuracy = (random_power(combat_power) if is_random else combat_power) / 2
 			damage = (random_power(combat_power) if is_random else combat_power) / 10
@@ -142,7 +144,7 @@ func random_power(base_power: float) -> float:
 
 
 func display_stats() -> void:
-	SignalBus.display_message.emit("%d / %d health.\n%d accuracy   %d evasion   %d damage\nPress 'E' to continue." %
+	SignalBus.display_message.emit("%d / %d health.\n%d accuracy   %d evasion   %d damage\nPress 'Enter' to swap.\nPress 'E' to finish swapping." %
 	[ceil(health), ceil(max_health), ceil(accuracy), ceil(evasion), ceil(damage)])
 
 

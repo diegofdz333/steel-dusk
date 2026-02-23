@@ -2,14 +2,18 @@ class_name Enemy
 
 extends CharacterBody2D
 
-var min_x = 20
-var max_x = 100
+var min_x = 10
+var max_x = 120
 var is_moving_right = false
 var speed = 20
 
 
 func _process(_delta):
 	var direction = Vector2.ZERO
+	
+	if randf() < (2 * _delta):
+		is_moving_right = not is_moving_right
+	
 	if is_moving_right:
 		if position.x > max_x:
 			is_moving_right = false

@@ -1,4 +1,4 @@
-extends Node
+#arm_left.player_minigame =extends Node
 
 enum Part { NONE, HEAD, BODY, LEFT_LEG, RIGHT_LEG, LEFT_ARM, RIGHT_ARM }
 

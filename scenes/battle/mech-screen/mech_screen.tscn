@@ -40,6 +40,7 @@ offset_bottom = 40.0
 
 [node name="Head" type="TextureRect" parent="Selection" unique_id=400500612]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -47,6 +48,7 @@ texture = ExtResource("2_omp5p")
 
 [node name="Body" type="TextureRect" parent="Selection" unique_id=396598327]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -54,6 +56,7 @@ texture = ExtResource("3_msbq5")
 
 [node name="ArmRight" type="TextureRect" parent="Selection" unique_id=715789990]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -61,6 +64,7 @@ texture = ExtResource("4_bpv73")
 
 [node name="ArmLeft" type="TextureRect" parent="Selection" unique_id=948392610]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -68,6 +72,7 @@ texture = ExtResource("5_e6ak2")
 
 [node name="LegRight" type="TextureRect" parent="Selection" unique_id=876085905]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -75,6 +80,7 @@ texture = ExtResource("6_b716l")
 
 [node name="LegLeft" type="TextureRect" parent="Selection" unique_id=796116369]
 visible = false
+z_index = 3
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -154,6 +160,7 @@ offset_bottom = 40.0
 
 [node name="Head" type="TextureRect" parent="Defend" unique_id=1408012239]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -161,6 +168,7 @@ texture = ExtResource("12_wvlqk")
 
 [node name="Body" type="TextureRect" parent="Defend" unique_id=1183537974]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -168,6 +176,7 @@ texture = ExtResource("13_q13sm")
 
 [node name="ArmRight" type="TextureRect" parent="Defend" unique_id=392684736]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -175,6 +184,7 @@ texture = ExtResource("14_wjrp6")
 
 [node name="ArmLeft" type="TextureRect" parent="Defend" unique_id=243330534]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -182,6 +192,7 @@ texture = ExtResource("15_4vr4r")
 
 [node name="LegRight" type="TextureRect" parent="Defend" unique_id=1050992447]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -189,6 +200,7 @@ texture = ExtResource("16_s5eem")
 
 [node name="LegLeft" type="TextureRect" parent="Defend" unique_id=2116509810]
 visible = false
+z_index = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
