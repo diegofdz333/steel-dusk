@@ -222,7 +222,7 @@ func progress_to_next_stage() -> void:
 				"The defended part has a significant chance to ignore damage dealt in turn.",
 				"When you are attacked, the inverse happens: You select a part to defend and the enemy will select a part to attack.",
 				"NOTE: Enemies have personalities that determine how they choose their targets.",
-				"Generally, enemies will attack and defend parts with more health.",
+				"Generally, enemies will attack and defend parts with less health.",
 			]
 			start_story()
 			story_image.show_tutorial_keys()
@@ -412,7 +412,7 @@ func progress_to_next_stage() -> void:
 
 
 func switch_parts(part_type: Enum.Part):
-	$MinigameRect/SoundEffectPlayer.play_damage_audio()
+	$MinigameRect/SoundEffectPlayer.play_damage_audio(true)
 	SignalBus.display_message.emit("")
 	match part_type:
 		Enum.Part.HEAD:

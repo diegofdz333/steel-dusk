@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cmprwq7o3jjef"
+path="res://.godot/imported/Story - 32 bit.mp3-37be4974c14c9a4ff723df798d92ed29.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Story - 32 bit.mp3"
+dest_files=["res://.godot/imported/Story - 32 bit.mp3-37be4974c14c9a4ff723df798d92ed29.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

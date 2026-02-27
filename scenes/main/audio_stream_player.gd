@@ -4,10 +4,12 @@ extends AudioStreamPlayer
 
 const DAMAGE_AUDIO_COOLDOWN = 1
 
-var story_music = preload("res://assets/music/8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3")
-# var battle_music = preload("res://assets/music/Retro_Platforming_-_David_Fesliyan.mp3")
-var battle_music = preload("res://assets/music/Battle.mp3")
-var boss_music = preload("res://assets/music/Boss_Time_-_www.FesliyanStudios.com.mp3")
+#var story_music = preload("res://assets/music/8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3")
+#var battle_music = preload("res://assets/music/Retro_Platforming_-_David_Fesliyan.mp3")
+#var boss_music = preload("res://assets/music/Boss_Time_-_www.FesliyanStudios.com.mp3")
+var story_music = preload("res://assets/music/Story - 32 bit.mp3")
+var battle_music = preload("res://assets/music/Battle - 32 bit.mp3")
+var boss_music = preload("res://assets/music/Boss - 32 bit.mp3")
 
 var damage_audio = preload("res://assets/sound-effects/dogwolf123-retro-hurt-sound-03-474780.mp3")
 
@@ -50,8 +52,8 @@ func play_boss_music():
 		play()
 
 
-func play_damage_audio():
-	if damage_sound_cooldown <= 0:
+func play_damage_audio(no_cooldown = false):
+	if damage_sound_cooldown <= 0 or no_cooldown:
 		damage_sound_cooldown = DAMAGE_AUDIO_COOLDOWN
 		stream = damage_audio
 		play()

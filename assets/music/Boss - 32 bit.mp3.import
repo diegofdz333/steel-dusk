@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bhwgw7tpvtpak"
+path="res://.godot/imported/Boss - 32 bit.mp3-eea8f02e02658ccbf3c27148e7e35070.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Boss - 32 bit.mp3"
+dest_files=["res://.godot/imported/Boss - 32 bit.mp3-eea8f02e02658ccbf3c27148e7e35070.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
